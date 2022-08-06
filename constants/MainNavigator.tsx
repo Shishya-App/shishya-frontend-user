@@ -8,7 +8,7 @@ import {
   FontAwesome5,
 } from "@expo/vector-icons";
 
-import GetStarted from "../screens/GetStarted";
+import Dashboard from "../screens/Dashboard";
 
 const Drawer = createDrawerNavigator<DrawerRoutes>();
 
@@ -27,7 +27,7 @@ const MainNavigator = () => {
     >
       <Drawer.Screen
         name="Dashboard"
-        component={GetStarted}
+        component={Dashboard}
         options={{
           drawerIcon: () => (
             <MaterialCommunityIcons name="view-dashboard" size={24} />

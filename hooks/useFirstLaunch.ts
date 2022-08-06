@@ -6,6 +6,7 @@ const useFirstLaunch = () => {
 
   useEffect(() => {
     const getInitialState = async () => {
+      // await AsyncStorage.removeItem("@launched");
       const value = await AsyncStorage.getItem("@launched");
       if (value === null) {
         await AsyncStorage.setItem("@launched", "true");
