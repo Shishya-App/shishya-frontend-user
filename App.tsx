@@ -14,6 +14,7 @@ import Loading from "./components/Loading";
 import Onboard from "./screens/Onboard";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
+import InitialStartScreen from "./screens/initialStart";
 
 const AppStack = createNativeStackNavigator<AppRoutes>();
 const AuthenticationStack = createNativeStackNavigator<AuthenticationRoutes>();
@@ -25,13 +26,15 @@ const App = () => {
 
   if (isFirstLaunch === null) return <Loading />;
   
+ 
   const AuthenticationNavigator = () => {
     return (
       <AuthenticationStack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={isFirstLaunch ? "Onboard" : "Login"}
+        initialRouteName={isFirstLaunch ? "Initial" : "Login"}
       >
-        <AuthenticationStack.Screen name="Onboard" component={Onboard} />
+        <AuthenticationStack.Screen name="Initial" component={InitialStartScreen} />
+        <AuthenticationStack.Screen name="Onboard" component={Onboard}/>
         <AuthenticationStack.Screen name="Login" component={Login} />
         <AuthenticationStack.Screen name="Signup" component={Signup} />
       </AuthenticationStack.Navigator>
