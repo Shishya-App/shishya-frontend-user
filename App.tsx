@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, {useState} from "react";
+import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -7,8 +7,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import useFirstLaunch from "./hooks/useFirstLaunch";
 import { AppRoutes } from "./constants/AppRoutes";
 import { AuthenticationRoutes } from "./constants/AuthenticationRoutes";
-
 import MainNavigator from "./constants/MainNavigator";
+import AuthContextProvider from "./store/AuthContext";
+import useStart from "./hooks/useStart";
+import useAuth from "./hooks/useAuth";
 
 import Loading from "./components/Loading";
 import Onboard from "./screens/Onboard";
@@ -20,11 +22,22 @@ const AppStack = createNativeStackNavigator<AppRoutes>();
 const AuthenticationStack = createNativeStackNavigator<AuthenticationRoutes>();
 
 const App = () => {
+  // todo -> Implement the logic during signup and login in the screen to complete the flow smoothly ....
   const isFirstLaunch = useFirstLaunch();
-  // todo -> implement the is logged in state
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, user } = useStart();
+  const auth = useAuth();
 
-  if (isFirstLaunch === null) return <Loading />;
+  const login = async () => {
+    if (isLoggedIn && user) {
+      await auth.login(user);
+    }
+  };
+
+  useEffect(() => {
+    login();
+  }, [isLoggedIn, isFirstLaunch, user]);
+
+  if (isFirstLaunch === null || isLoggedIn === null) return <Loading />;
   
  
   const AuthenticationNavigator = () => {
@@ -59,4 +72,10 @@ const App = () => {
   );
 };
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <AuthContextProvider>
+      <App />
+    </AuthContextProvider>
+  )
+}
