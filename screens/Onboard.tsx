@@ -33,7 +33,9 @@ const Onboard = ({
             tortor, est a aliquam. Pretium netus{" "}
           </Text>
         </View>
+        <View style={styles.button__wrapper}>
           <CustomizedButton  handlePress={() => navigation.navigate('Signup')} title={"Get Started"}/>
+        </View>
       </View>
     </View>
   );
@@ -75,4 +77,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 15
   },
+  button__wrapper: {
+    width: '70%'
+  }
 });
