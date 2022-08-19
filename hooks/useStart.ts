@@ -8,7 +8,7 @@ const useStart = () => {
 
     useEffect(() => {
         const getInitialState = async () => {
-            const user = await AsyncStorage.getItem("@user");
+            const user = await AsyncStorage.getItem("@token");
             if(!user){
                 setIsLoggedIn(false);
             }

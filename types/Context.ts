@@ -7,4 +7,6 @@ export interface IAuthContext {
   login: (user: IUser) => Promise<void>;
   loginAPI: (username: string, password: string) => Promise<any> ;
   signupAPI: (username: string, password: string, email: string) => Promise<any>;
+  token: string | null;
+  logout: () => Promise<void>;
 }

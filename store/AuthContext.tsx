@@ -10,6 +10,8 @@ export const AuthContext = createContext<IAuthContext>({
     login: async () => {},
     loginAPI:  async (username: string, password: string) => {},
     signupAPI: async (username: string, password: string, email: string) => {},
+    logout: async () => {},
+    token: null,
   });
   
   interface Props {
@@ -26,9 +28,6 @@ export const AuthContext = createContext<IAuthContext>({
     const login = async () => {
       setIsLoggedIn(true);
     };
-
-
-    // todo -> Fix the return of response before it is being evaluated
     
     const loginAPI = async (username: string, password: string) => {
       const data = {
@@ -40,12 +39,12 @@ export const AuthContext = createContext<IAuthContext>({
         url: `login/`,
         data: data,
       });
+      
+      console.log(res.tokens.access);
       await AsyncStorage.setItem("@token", res.tokens.access);
       setToken(res.tokens.access);
       // console.log("RES: ", res.tokens.access);
-      if(res){
-        return res;
-      }
+      return res;
     }
 
     const signupAPI = async (username: string, password: string, email: string) => {
@@ -67,7 +66,11 @@ export const AuthContext = createContext<IAuthContext>({
     const getCurrUser = () => {
 
     }
-  
+    const logout = async () => {
+      await AsyncStorage.removeItem("@token");
+      setToken(null);
+      setIsLoggedIn(false);
+    } 
     const value = useMemo(
       () => ({
         isLoggedIn,
@@ -76,7 +79,8 @@ export const AuthContext = createContext<IAuthContext>({
         loginAPI,
         signupAPI,
         getCurrUser,
-        token
+        token,
+        logout
       }),
       [user, isLoggedIn]
     );

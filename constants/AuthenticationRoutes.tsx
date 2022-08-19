@@ -14,4 +14,5 @@ export type AuthenticationRoutes = {
     Onboard: undefined;
     Login: undefined;
     Signup: undefined;
+    // Dashboard: undefined;
 };
