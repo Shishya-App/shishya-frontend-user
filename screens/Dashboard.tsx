@@ -1,22 +1,27 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import ArcBackground from "../components/ArcBackground";
+import PdfCarousel from "../components/PdfCarousel";
 
 const Dashboard = () => {
+  return (
+    <ArcBackground>
+      <PdfCarousel />
+    </ArcBackground>
+  );
+};
 
-    return (
-        <View>
-            <Text style={styles.textStyle}>Welcome to Dashboard</Text>
-        </View>
-    )
-}
+Dashboard.defaultProps = {
+  modal: false,
+};
 
 export default Dashboard;
 
 const styles = StyleSheet.create({
-    textStyle: {
-        color:'black',
-        fontSize:24,
-        fontWeight: '700',
-        textAlign: 'center'
-    }
+  textStyle: {
+    color: "black",
+    fontSize: 24,
+    fontWeight: "700",
+    textAlign: "center",
+  },
 });
