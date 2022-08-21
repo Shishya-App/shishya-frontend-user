@@ -1,40 +1,102 @@
 import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { DrawerRoutes } from "./DrawerRoutes";
 import {
   MaterialIcons as Icon,
-  MaterialCommunityIcons,
   FontAwesome5,
+  Ionicons,
 } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { DashboardRoutes } from "./DashboardRoutes";
 
 import Dashboard from "../screens/Dashboard";
+import AddButton from "../components/AddButton";
+import { Text, SafeAreaView } from "react-native";
+import UploadDocuments from "../screens/UploadDocuments";
+import Profile from "../screens/Profile";
+import MyDocuments from "../screens/MyDocuments";
 
-const Drawer = createDrawerNavigator<DrawerRoutes>();
+const Apply = () => <Text>Apply</Text>;
+
+const TabNavigator = createBottomTabNavigator<DashboardRoutes>();
 
 const MainNavigator = () => {
+  const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(true);
+
+  const UpploadDocumentsModal = () => <UploadDocuments visible={modalIsOpen} />;
+
   return (
-    <Drawer.Navigator
-      screenOptions={{
-        drawerActiveBackgroundColor: "#D2D2D2",
-        drawerLabelStyle: {
-          fontSize: 16,
-          fontWeight: "bold",
-        },
-        drawerActiveTintColor: "#131313",
-      }}
-      useLegacyImplementation={true}
-    >
-      <Drawer.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          drawerIcon: () => (
-            <MaterialCommunityIcons name="view-dashboard" size={24} />
-          ),
+    <SafeAreaView style={{ flex: 1 }}>
+      <TabNavigator.Navigator
+        initialRouteName="Dashboard"
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarActiveTintColor: "#FFFFFF",
+          tabBarInactiveTintColor: "#D3D3D3",
+          headerShown: false,
+          tabBarHideOnKeyboard: true,
+          tabBarStyle: {
+            backgroundColor: "#5D5AFF",
+            borderTopLeftRadius: 35,
+            borderTopRightRadius: 35,
+          },
         }}
-      />
-    </Drawer.Navigator>
+      >
+        <TabNavigator.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <Icon name="home" size={focused ? 30 : 24} color={color} />
+            ),
+          }}
+        />
+        <TabNavigator.Screen
+          name="My Documents"
+          component={MyDocuments}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name="documents"
+                size={focused ? 30 : 24}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <TabNavigator.Screen
+          name="Upload Documents"
+          component={UpploadDocumentsModal}
+          options={{
+            tabBarIcon: AddButton,
+          }}
+        />
+        <TabNavigator.Screen
+          name="Apply"
+          component={Apply}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <FontAwesome5
+                name="file-signature"
+                size={focused ? 30 : 24}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <TabNavigator.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <FontAwesome5
+                name="user-circle"
+                size={focused ? 30 : 24}
+                color={color}
+              />
+            ),
+          }}
+        />
+      </TabNavigator.Navigator>
+    </SafeAreaView>
   );
 };
 
