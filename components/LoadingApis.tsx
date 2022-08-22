@@ -5,15 +5,11 @@ type propTypes = {
   dialog: string;
 };
 
-const LoadingAPIS = ({
-  dialog,
-}: propTypes) => {
+const LoadingAPIS = ({ dialog }: propTypes) => {
   return (
-    <View>
+    <View style={styles.loadingWrapper}>
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>
-          {dialog}
-        </Text>
+        <Text style={styles.loadingText}>{dialog}</Text>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     </View>
@@ -23,6 +19,9 @@ const LoadingAPIS = ({
 export default LoadingAPIS;
 
 const styles = StyleSheet.create({
+  loadingWrapper: {
+    margin: 20,
+  },
   loadingContainer: {
     display: "flex",
     justifyContent: "center",
@@ -37,5 +36,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     // lineHeight: 10
   },
-
 });

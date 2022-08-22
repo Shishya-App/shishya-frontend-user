@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from "react-native";
 import {
   AuthenticationRoutes,
   StackNavigationProps,
@@ -111,8 +111,10 @@ const Signup = ({
         <View style={styles.footer}>
           <Text style={styles.footer__text}>
             Already have an account?{" "}
-            <Text style={styles.auth__text}>Login</Text>
           </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.auth__text}>Login</Text>
+            </TouchableOpacity>
         </View>
        
         <DialogComponent
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     marginBottom: 10,
+    flexDirection: "row",
   },
   footer__text: {
     textAlign: "center",

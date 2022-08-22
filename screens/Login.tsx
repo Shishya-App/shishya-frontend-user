@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
 import CustomizedButton from "../components/customizedButton";
 import { AuthContext } from "../store/AuthContext";
@@ -13,11 +13,9 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
   const { loginAPI } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
-  // const handlePress = async () => {
-  //   setLoading(true);
-  //   const res = await loginAPI(username, password);
-  //   setLoading(false);
-  // };
+  const handlePageChange = () => {
+    navigation.dispatch(CommonActions.navigate({ name: "Signup" }));
+  }
 
   return (
     !loading ? 
@@ -75,14 +73,19 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
         </Formik>
         <View style={styles.footer}>
           <Text style={styles.footer__text}>
-            Dont have an account? <Text style={styles.auth__text}>Sign Up</Text>
+            Dont have an account? 
           </Text>
+          <Pressable onPress={handlePageChange}>
+            <Text style={styles.auth__text}>
+              {" "}Signup
+            </Text>
+          </Pressable>
         </View>
         {/* <DialogComponent dialog="Email has been sent to you. Please confirm it...." onDone={() => navigation.navigate("Login")} title={"Email Confirmation"} toggleDialog={toggleDialog} visible={visible} /> */}
       </View>
     </View>
     :
-    <LoadingAPIS dialog="Please wait, while we redirect you to your dashboard :)"/>
+    <LoadingAPIS dialog="Please wait, while we confirm your account details :)"/>
   );
 };
 
@@ -134,8 +137,7 @@ const styles =  StyleSheet.create({
   },
   footer: {
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-end",
+    flexDirection: "row",
   },
   footer__text: {
     textAlign: "center",
