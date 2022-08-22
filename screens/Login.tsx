@@ -2,15 +2,12 @@ import React, { useEffect, useContext, useState } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
 import CustomizedButton from "../components/customizedButton";
-import {
-  AuthenticationRoutes,
-  StackNavigationProps,
-} from "../constants/AuthenticationRoutes";
 import { AuthContext } from "../store/AuthContext";
 import CustomInput from "../components/input";
 import { loginValidationSchema } from "../utils/validations/AuthValidations";
 import { Formik } from "formik";
 import LoadingAPIS from "../components/LoadingApis";
+import { CommonActions } from "@react-navigation/native";
 
 const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) => {
   const { loginAPI } = useContext(AuthContext);
@@ -41,7 +38,14 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
               const res = await loginAPI(values.username, values.password);
               setLoading(false);
               console.log("LOGIN RES: ", res);
-              if(res?.tokens) navigation.navigate('Main');
+              if(res?.tokens) {
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: "Main" }],
+                  })
+                )
+              };
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
