@@ -11,31 +11,35 @@ import MainNavigator from "./constants/MainNavigator";
 import AuthContextProvider from "./store/AuthContext";
 import useStart from "./hooks/useStart";
 import useAuth from "./hooks/useAuth";
-
+import { AuthContext } from "./store/AuthContext";
 import Loading from "./components/Loading";
 import Onboard from "./screens/Onboard";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import InitialStartScreen from "./screens/initialStart";
-
+import Dashboard from "./screens/Dashboard";
+import { useContext } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const AppStack = createNativeStackNavigator<AppRoutes>();
 const AuthenticationStack = createNativeStackNavigator<AuthenticationRoutes>();
 
 const App = () => {
   // todo -> Implement the logic during signup and login in the screen to complete the flow smoothly ....
   const isFirstLaunch = useFirstLaunch();
-  const { isLoggedIn, user } = useStart();
+  // const { isLoggedIn, user } = useStart();
+  const { token, isLoggedIn } = useContext(AuthContext);
+  
   const auth = useAuth();
-
-  const login = async () => {
-    if (isLoggedIn && user) {
-      await auth.login(user);
-    }
-  };
-
-  useEffect(() => {
-    login();
-  }, [isLoggedIn, isFirstLaunch, user]);
+  AsyncStorage.getItem("@token").then((token) => {console.log("TOKEN FROM ASYNC STORAGE: ", token)});
+  // const login = async () => {
+  //   if (isLoggedIn && user) {
+  //     await auth.login(user);
+  //   }
+  // };
+  
+  // useEffect(() => {
+  //   login();
+  // }, [isLoggedIn, isFirstLaunch, user]);
 
   if (isFirstLaunch === null || isLoggedIn === null) return <Loading />;
   
@@ -50,6 +54,7 @@ const App = () => {
         <AuthenticationStack.Screen name="Onboard" component={Onboard}/>
         <AuthenticationStack.Screen name="Login" component={Login} />
         <AuthenticationStack.Screen name="Signup" component={Signup} />
+        {/* <AuthenticationStack.Screen name="Dashboard" component={Dashboard} /> */}
       </AuthenticationStack.Navigator>
     )
   }
@@ -64,8 +69,9 @@ const App = () => {
             name="Authentication"
             component={AuthenticationNavigator}
           />
-
-          <AppStack.Screen name="Main" component={MainNavigator}/>
+          <AppStack.Screen name="Main" 
+          component={MainNavigator}
+          />
         </AppStack.Navigator>
       </SafeAreaProvider>
     </NavigationContainer>

@@ -12,9 +12,7 @@ type propTypes = {
 
 const DialogComponent = ({visible, toggleDialog, dialog, onDone, title}: propTypes) => {
   return (
-    // todo -> CUSTOMIZE THIS DIALOG COMPONENT ACCORDING TO THE DESIGN LATER ....
-
-    <Dialog isVisible={visible} onBackdropPress={toggleDialog}>
+    <Dialog isVisible={visible} onBackdropPress={toggleDialog} style={styles.dialogBoxStyle}>
       <Dialog.Title title={title} />
       <Text style={styles.textStyle}>{dialog}</Text>
       <Dialog.Actions>
@@ -30,9 +28,13 @@ const DialogComponent = ({visible, toggleDialog, dialog, onDone, title}: propTyp
 export default DialogComponent;
 
 const styles = StyleSheet.create({
+    dialogBoxStyle: {
+      borderRadius: 10,
+    },
     textStyle: {
-        color: 'black',
+        color: '#3A3F47',
+        fontWeight: '300',
         fontSize: 14,
-        fontWeight: '500',
+        lineHeight: 18,
     }
 });
