@@ -1,11 +1,17 @@
 import React, { useEffect, useContext } from "react";
-import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import {
   AuthenticationRoutes,
   StackNavigationProps,
 } from "../constants/AuthenticationRoutes";
 import CustomizedButton from "../components/customizedButton";
-import useAxios from "../hooks/useAxios";
 import LoadingAPIS from "../components/LoadingApis";
 import DialogComponent from "../components/DialogComponent";
 import { AuthContext } from "../store/AuthContext";
@@ -17,10 +23,10 @@ const Signup = ({
   navigation,
 }: StackNavigationProps<AuthenticationRoutes, "Signup">) => {
   const { signupAPI } = useContext(AuthContext);
-  // todo -> HANDLE CONFIRM PASSWORD FEATURE IN FRONTEND ONLY
 
   const [visible, setVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [err, setErr] = React.useState(false);
 
   const toggleDialog = () => {
     setVisible(!visible);
@@ -32,102 +38,115 @@ const Signup = ({
   //   toggleDialog();
   // };
 
-  return (
-    !loading ? 
-    <View style={styles.main__container}>
-      <Image source={require("../assets/images/back.png")} />
-      <View style={styles.secondaryContainer}>
-        <View style={styles.textViews}>
-          <View style={styles.logo__container}>
-            <Image source={require("../assets/images/signupHat.png")} />
-          </View>
-          <Text style={styles.textStyle}>Create an account</Text>
-          <Text style={styles.subTextStyle}>
-            Ease out your admission process
-          </Text>
-        </View>
-        <Formik
-          validationSchema={signUpValidationSchema}
-          initialValues={{
-            username: "",
-            password: "",
-            email: "",
-            confirmPassword: "",
-          }}
-          onSubmit={async (values) => {
-            setLoading(true);
-            const res = await signupAPI(
-              values.username,
-              values.password,
-              values.email
-            );
-            console.log("SIGNUP RES: ", res);
-            setLoading(false);
-            toggleDialog();
-          }}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
-            <View style={styles.inputs__wrapper}>
-              <CustomInput
-                placeholder="Username"
-                setVal={handleChange("username")}
-                label={"Username"}
-                isPass={false}
-                keyboardType={"default"}
-                onBlur={handleBlur("username")}
-                error={errors.username}
-              />
-              <CustomInput
-                placeholder="Email"
-                setVal={handleChange("email")}
-                label={"Email"}
-                error={errors.email}
-                isPass={false}
-                keyboardType={"email-address"}
-                onBlur={handleBlur("email")}
-              />
-              <CustomInput
-                placeholder="Password"
-                setVal={handleChange("password")}
-                label={"Password"}
-                error={errors.password}
-                isPass={true}
-                keyboardType={undefined}
-                onBlur={handleBlur("password")}
-              />
-              <CustomInput
-                placeholder="Confirm Password"
-                setVal={handleChange("confirmPassword")}
-                label={"Confirm Password"}
-                error={errors.confirmPassword}
-                isPass={true}
-                keyboardType={undefined}
-                onBlur={handleBlur("confirmPassword")}
-              />
-              <CustomizedButton handlePress={handleSubmit} title={"Sign Up"} />
+  return !loading ? (
+    <ScrollView style={styles.main__container}>
+      <View style={styles.main__container}>
+        <Image source={require("../assets/images/back.png")} />
+        <View style={styles.secondaryContainer}>
+          <View style={styles.textViews}>
+            <View style={styles.logo__container}>
+              <Image source={require("../assets/images/signupHat.png")} />
             </View>
-          )}
-        </Formik>
-        <View style={styles.footer}>
-          <Text style={styles.footer__text}>
-            Already have an account?{" "}
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.textStyle}>Create an account</Text>
+            <Text style={styles.subTextStyle}>
+              Ease out your admission process
+            </Text>
+          </View>
+          <Formik
+            validationSchema={signUpValidationSchema}
+            initialValues={{
+              username: "",
+              password: "",
+              email: "",
+              confirmPassword: "",
+            }}
+            onSubmit={async (values) => {
+              setLoading(true);
+              const res = await signupAPI(
+                values.username,
+                values.password,
+                values.email
+              );
+              if (!res.isErr) {
+                console.log("SIGNUP RES: ", res);
+                setLoading(false);
+                toggleDialog();
+              } else {
+                setLoading(false);
+                setErr(true);
+              }
+            }}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+              <View style={styles.inputs__wrapper}>
+                <CustomInput
+                  placeholder="Username"
+                  setVal={handleChange("username")}
+                  label={"Username"}
+                  isPass={false}
+                  keyboardType={"default"}
+                  onBlur={handleBlur("username")}
+                  error={errors.username}
+                />
+                <CustomInput
+                  placeholder="Email"
+                  setVal={handleChange("email")}
+                  label={"Email"}
+                  error={errors.email}
+                  isPass={false}
+                  keyboardType={"email-address"}
+                  onBlur={handleBlur("email")}
+                />
+                <CustomInput
+                  placeholder="Password"
+                  setVal={handleChange("password")}
+                  label={"Password"}
+                  error={errors.password}
+                  isPass={true}
+                  keyboardType={undefined}
+                  onBlur={handleBlur("password")}
+                />
+                <CustomInput
+                  placeholder="Confirm Password"
+                  setVal={handleChange("confirmPassword")}
+                  label={"Confirm Password"}
+                  error={errors.confirmPassword}
+                  isPass={true}
+                  keyboardType={undefined}
+                  onBlur={handleBlur("confirmPassword")}
+                />
+
+                {err ? (
+                  <Text style={styles.error__text}>
+                    Something went wrong. Please try again
+                  </Text>
+                ) : null}
+                <CustomizedButton
+                  handlePress={handleSubmit}
+                  title={"Sign Up"}
+                />
+              </View>
+            )}
+          </Formik>
+          <View style={styles.footer}>
+            <Text style={styles.footer__text}>Already have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text style={styles.auth__text}>Login</Text>
             </TouchableOpacity>
+          </View>
+
+          <DialogComponent
+            dialog="An email has been sent to your email address. Please follow the link to confirm your account."
+            onDone={() => navigation.navigate("Login")}
+            title={"Confirm Email..."}
+            toggleDialog={toggleDialog}
+            visible={visible}
+          />
         </View>
-       
-        <DialogComponent
-          dialog="An email has been sent to your email address. Please follow the link to confirm your account."
-          onDone={() => navigation.navigate("Login")}
-          title={"Confirm Email..."}
-          toggleDialog={toggleDialog}
-          visible={visible}
-        />
       </View>
-    </View>
-    :
-    <LoadingAPIS dialog="Please Wait while we fetch data your data."/>
+    </ScrollView>
+  ) : (
+    <LoadingAPIS dialog="Please Wait while we fetch data your data." />
   );
 };
 
@@ -191,5 +210,13 @@ const styles = StyleSheet.create({
   },
   auth__text: {
     color: "#4E0189",
+  },
+  error__text: {
+    fontSize: 12,
+    fontWeight: "300",
+    color: "#FF0000",
+    marginTop: 5,
+    paddingHorizontal: 5,
+    textAlign: "center",
   },
 });

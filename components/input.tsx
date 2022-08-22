@@ -59,6 +59,5 @@ const styles = (error: any) => StyleSheet.create({
         color: "#FF0000",
         marginTop: 5,
         paddingHorizontal: 5,
-
     }
 });

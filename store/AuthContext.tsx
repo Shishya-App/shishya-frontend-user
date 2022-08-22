@@ -22,7 +22,7 @@ export const AuthContext = createContext<IAuthContext>({
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [user, setUser] = useState<IUser | null>(null);
     const [token, setToken] = useState<string | null>(null);
-
+  
     const {execute}  = useAxios();
 
     const login = async () => {
@@ -34,17 +34,24 @@ export const AuthContext = createContext<IAuthContext>({
         username: username,
         password: password,
       };
-      const res = await execute({
-        method: "POST",
-        url: `login/`,
-        data: data,
-      });
-      
-      console.log(res.tokens.access);
-      await AsyncStorage.setItem("@token", res.tokens.access);
-      setToken(res.tokens.access);
-      // console.log("RES: ", res.tokens.access);
-      return res;
+        const res = await execute({
+          method: "POST",
+          url: `login/`,
+          data: data,
+        });
+        if(!res.isErr){
+          await AsyncStorage.setItem("@token", res.res.tokens.access);
+          setToken(res?.res?.tokens?.access);
+          return {
+            isErr: false,
+            res: res.res,
+          }
+        } else{
+          return {
+            isErr: true,
+            res: res.res,
+          }
+        }
     }
 
     const signupAPI = async (username: string, password: string, email: string) => {
@@ -53,14 +60,23 @@ export const AuthContext = createContext<IAuthContext>({
         email: email,
         password: password,
       };
+        const res = await execute({
+          method: "POST",
+          url: `register/`,
+          data: data,
+        });
   
-      const res = await execute({
-        method: "POST",
-        url: `register/`,
-        data: data,
-      });
-
-      return res;
+        if(!res.isErr){
+          return {
+            isErr: false,
+            res: res.res,
+          }
+        } else {
+          return {
+            isErr: true,
+            res: res.res,
+          }
+        }
     }
 
     const getCurrUser = () => {

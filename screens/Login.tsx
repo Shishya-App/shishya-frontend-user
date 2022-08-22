@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, ScrollView } from "react-native";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
 import CustomizedButton from "../components/customizedButton";
 import { AuthContext } from "../store/AuthContext";
@@ -12,6 +12,7 @@ import { CommonActions } from "@react-navigation/native";
 const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) => {
   const { loginAPI } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(false);
 
   const handlePageChange = () => {
     navigation.dispatch(CommonActions.navigate({ name: "Signup" }));
@@ -19,6 +20,7 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
 
   return (
     !loading ? 
+    <ScrollView style={styles.main__scrollview__container}>
     <View style={styles.main__container}>
       <View style={styles.header__style}>
         <Text style={styles.login__text}>Login</Text>
@@ -34,16 +36,21 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
           onSubmit={async (values) => {
               setLoading(true);
               const res = await loginAPI(values.username, values.password);
-              setLoading(false);
-              console.log("LOGIN RES: ", res);
-              if(res?.tokens) {
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: "Main" }],
-                  })
-                )
-              };
+              if(!res.isErr){
+                setLoading(false);
+                console.log("LOGIN RES: ", res.res);
+                if(res?.res?.tokens) {
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{ name: "Main" }],
+                    })
+                  )
+                };
+              } else {
+                setLoading(false);
+                setErr(true);
+              }
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -66,7 +73,7 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
                 isPass={true}
                 error={errors.password}
               />
-              
+              {err ? <Text style={styles.error__text}>Invalid username or password</Text> : null}
               <CustomizedButton handlePress={handleSubmit} title={"Log in"} />
             </View>
           )}
@@ -84,6 +91,7 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
         {/* <DialogComponent dialog="Email has been sent to you. Please confirm it...." onDone={() => navigation.navigate("Login")} title={"Email Confirmation"} toggleDialog={toggleDialog} visible={visible} /> */}
       </View>
     </View>
+    </ScrollView>
     :
     <LoadingAPIS dialog="Please wait, while we confirm your account details :)"/>
   );
@@ -92,6 +100,11 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
 export default Login;
 
 const styles =  StyleSheet.create({
+  main__scrollview__container: {
+    backgroundColor: "white",
+    width: "100%",
+    height: "100%",
+  },
   main__container: {
     backgroundColor: "white",
     width: "100%",
@@ -146,4 +159,12 @@ const styles =  StyleSheet.create({
   auth__text: {
     color: "#4E0189",
   },
+  error__text: {
+    fontSize: 12,
+    fontWeight: '300',
+    color: "#FF0000",
+    marginTop: 5,
+    paddingHorizontal: 5,
+    textAlign: "center",
+  }
 });

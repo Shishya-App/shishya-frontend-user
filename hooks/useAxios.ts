@@ -7,10 +7,16 @@ const useAxios = () => {
     const execute = async (params: AxiosRequestConfig) => {
         try {
             const res = await AxiosInstance.request(params)
-            return res.data;
+            return {
+                isErr: false,
+                res: res.data
+            };
 
         } catch(err) {
-            return err as Error;
+            return {
+                isErr: true,
+                res: err as Error
+            }
         }
     }
 
