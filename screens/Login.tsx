@@ -2,6 +2,10 @@ import React, { useEffect, useContext, useState } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
 import CustomizedButton from "../components/customizedButton";
+import {
+  AuthenticationRoutes,
+  StackNavigationProps,
+} from "../constants/AuthenticationRoutes";
 import { AuthContext } from "../store/AuthContext";
 import CustomInput from "../components/input";
 import { loginValidationSchema } from "../utils/validations/AuthValidations";
