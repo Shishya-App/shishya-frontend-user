@@ -3,7 +3,8 @@ import * as yup from 'yup';
 export const loginValidationSchema = yup.object().shape({
     username: yup. 
     string()
-    .min(3, ({min}) => `Username must be at least ${min} characters long`),
+    .min(3, ({min}) => `Username must be at least ${min} characters long`)
+    .required('Username is required'),
 
     password: yup
     .string()
