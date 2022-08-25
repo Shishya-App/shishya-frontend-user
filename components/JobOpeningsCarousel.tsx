@@ -45,14 +45,14 @@ const JobOpeningsCarousel: React.FC<Props> = ({ navigation, data }) => {
               borderRadius: 10,
             }}
           />
-          <Text
-            style={{
-              fontSize: 16,
-              marginLeft: 10,
-            }}
-          >
-            {item.company}
-          </Text>
+          <View style={{ marginHorizontal: 10 }}>
+            <Text style={{ fontSize: 16 }} numberOfLines={1}>
+              {item.company}
+            </Text>
+            <Text style={{ fontSize: 12, opacity: 0.5 }} numberOfLines={1}>
+              {item.position}
+            </Text>
+          </View>
         </View>
       )}
     />
