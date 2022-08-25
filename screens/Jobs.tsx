@@ -1,11 +1,19 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import { Card, SearchBar } from "@rneui/base";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { JobData } from "../types/Job";
+import { ApplicationStatus, JobData } from "../types/Job";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
+import { Ionicons } from "@expo/vector-icons";
 
-// job 
+// job
 // image
 // date
 
@@ -22,28 +30,103 @@ const jobData: JobData[] = [
     title: "Product Designer",
     company: "Google INC",
     tags: ["Full Time", "In Office"],
-    applicationStatus: "Not Applied",
+    applicationStatus: "Accepted",
     salary: "$165k",
     description: "Google toh bhai, company out of bounds",
   },
 ];
 
 const Jobs = ({ navigation }: StackNavigationProps<AppRoutes, "Jobs">) => {
+  const [data, setData] = React.useState<JobData[]>([]);
+  const [searchResult, setSearchResult] = React.useState<JobData[]>([]);
+
+  React.useEffect(() => {
+    setData(jobData);
+    setSearchResult(jobData);
+  }, []);
+
+  const handleSearch = (text: string) => {
+    const result = jobData.filter((job) =>
+      job.title.toLowerCase().includes(text.toLowerCase())
+    );
+    setSearchResult(result);
+  };
+
+  const getIconName = (status: ApplicationStatus) => {
+    switch (status) {
+      case "Pending":
+        return "ios-information-circle-sharp";
+      case "Applied":
+        return "ios-information-circle-sharp";
+      case "Accepted":
+        return "checkmark-circle-sharp";
+      case "Rejected":
+        return "close-circle-sharp";
+    }
+  };
+
+  const getColor = (status: ApplicationStatus) => {
+    switch (status) {
+      case "Pending":
+        return "#ffc107";
+      case "Applied":
+        return "#ffc107";
+      case "Accepted":
+        return "#28a745";
+      case "Rejected":
+        return "#dc3545";
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <SearchBar
-        placeholder="Search"
-        containerStyle={{
-          marginHorizontal: 20,
-          borderRadius: 20,
-          backgroundColor: "#5D5AFF",
+      <View style={{ marginTop: 10 }}>
+        <SearchBar
+          platform="android"
+          placeholder="Search"
+          placeholderTextColor="white"
+          inputStyle={{ color: "white" }}
+          containerStyle={{
+            backgroundColor: "#5D5AFF",
+            marginHorizontal: 20,
+            borderRadius: 20,
+          }}
+          searchIcon={{
+            type: "material-community",
+            name: "magnify",
+            color: "white",
+          }}
+          cancelIcon={{
+            type: "material-community",
+            name: "keyboard-backspace",
+            color: "white",
+          }}
+          clearIcon={{
+            type: "material-community",
+            name: "close",
+            color: "white",
+          }}
+          inputContainerStyle={{
+            backgroundColor: "#5D5AFF",
+            borderRadius: 20,
+          }}
+          onChangeText={(text) => handleSearch(text)}
+        />
+      </View>
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "bold",
+          color: "#000000",
+          opacity: 0.7,
+          marginLeft: 25,
+          marginTop: 6,
         }}
-        style={{ color: "red" }}
-        inputStyle={{ color: "blue", backgroundColor: "yellow" }}
-      />
-      <Text>45 relevant jobs found</Text>
+      >
+        {searchResult.length} relevant jobs found
+      </Text>
       <FlatList
-        data={jobData}
+        data={searchResult}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <Pressable
@@ -52,10 +135,117 @@ const Jobs = ({ navigation }: StackNavigationProps<AppRoutes, "Jobs">) => {
             }}
           >
             {/* @ts-ignore */}
-            <Card>
-              <Card.Title>
-                <Text>{item.title}</Text>
-              </Card.Title>
+            <Card
+              containerStyle={{
+                borderRadius: 12,
+                marginHorizontal: 20,
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Image
+                    style={{ width: 50, height: 50 }}
+                    source={{
+                      uri: "https://picsum.photos/seed/picsum/200/300",
+                    }}
+                  />
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginLeft: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.title}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        opacity: 0.8,
+                      }}
+                    >
+                      {item.company}
+                    </Text>
+                  </View>
+                </View>
+                {item.applicationStatus !== "Not Applied" && (
+                  <View>
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        backgroundColor: getColor(item.applicationStatus),
+                        padding: 4,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Ionicons
+                        name={getIconName(item.applicationStatus)}
+                        size={16}
+                        style={{
+                          marginRight: 5,
+                          color: "white",
+                        }}
+                      />
+                      <Text style={{ fontSize: 12, color: "white" }}>
+                        {item.applicationStatus}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+              <View
+                style={{
+                  marginTop: 2,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 5,
+                  }}
+                >
+                  {item.tags.length > 0 &&
+                    item.tags.map((tag, index) => (
+                      <View
+                        key={index}
+                        style={{
+                          marginRight: 5,
+                          backgroundColor: "#F5F7FC",
+                          borderRadius: 5,
+                          padding: 3,
+                        }}
+                      >
+                        <Text style={{ fontSize: 12 }}>{tag}</Text>
+                      </View>
+                    ))}
+                </View>
+                <View>
+                  <Text>{item.salary}</Text>
+                </View>
+              </View>
             </Card>
           </Pressable>
         )}
