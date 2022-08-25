@@ -7,35 +7,35 @@ import { BottomTabNavigationProps, DashboardRoutes} from "../constants/Dashboard
 const formData = [
   {
     id: 1,
-    name: "Form 1",
+    title: "Form 1",
   },
   {
     id: 2,
-    name: "Form 2",
+    title: "Form 2",
   },
   {
     id: 3,
-    name: "Form 3",
+    title: "Form 3",
   },
   {
     id: 4,
-    name: "Form 4",
+    title: "Form 4",
   },
   {
     id: 5,
-    name: "Form 5",
+    title: "Form 5",
   },
   {
     id: 6,
-    name: "Form 6",
+    title: "Form 6",
   },
   {
     id: 7,
-    name: "Form 7",
+    title: "Form 7",
   },
   {
     id: 8,
-    name: "Form 8",
+    title: "Form 8",
   },
 ];
 const Apply = ({navigation}: BottomTabNavigationProps<DashboardRoutes, "Apply"> ) => {
