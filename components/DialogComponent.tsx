@@ -16,6 +16,10 @@ const DialogComponent = ({visible, toggleDialog, dialog, onDone, title}: propTyp
       <Dialog.Title title={title} />
       <Text style={styles.textStyle}>{dialog}</Text>
       <Dialog.Actions>
+      <Dialog.Button
+          title="Cancel"
+          onPress={toggleDialog}
+        />
         <Dialog.Button
           title="Proceed"
           onPress={onDone}
