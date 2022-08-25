@@ -87,9 +87,9 @@ const Login = ({navigation}: StackNavigationProps<AppRoutes, "Authentication">) 
               {" "}Signup
             </Text>
           </Pressable>
-          <Pressable onPress={() => {
+          {/* <Pressable onPress={() => {
             navigation.navigate("Main");
-          }}><Text>Click me</Text></Pressable>
+          }}><Text>Click me</Text></Pressable> */}
         </View>
         {/* <DialogComponent dialog="Email has been sent to you. Please confirm it...." onDone={() => navigation.navigate("Login")} title={"Email Confirmation"} toggleDialog={toggleDialog} visible={visible} /> */}
       </View>

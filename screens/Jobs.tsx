@@ -31,7 +31,7 @@ const jobData: JobData[] = [
     title: "Product Designer",
     company: "Google INC",
     tags: ["Full Time", "In Office"],
-    applicationStatus: "Accepted",
+    applicationStatus: "Not Applied",
     salary: "$165k",
     description: "Google toh bhai, company out of bounds",
   },
