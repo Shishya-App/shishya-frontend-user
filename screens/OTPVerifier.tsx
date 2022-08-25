@@ -32,7 +32,7 @@ const VerifyOTP = ({
     return () => clearInterval(interval);
   }, [timer]);
 
-  const TEMP_OTP = "4578";
+  const TEMP_OTP = "1201";
   const resendOTP = () => {};
 
   return (

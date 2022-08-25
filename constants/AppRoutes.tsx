@@ -2,7 +2,7 @@ import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DocumentData } from "../types/Document";
 import { JobData } from "../types/Job";
-
+import { FormData } from "../types/Form";
 export interface StackNavigationProps<
   Paramlist extends ParamListBase,
   RouteName extends keyof Paramlist = string
@@ -17,5 +17,5 @@ export type AppRoutes = {
   "Single Document": { document: DocumentData };
   Jobs: undefined;
   "Single Job": { job: JobData };
-  ApplyNow: undefined
+  ApplyNow: {form: FormData}
 };

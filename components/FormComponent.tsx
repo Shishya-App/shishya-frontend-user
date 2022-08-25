@@ -11,10 +11,10 @@ interface IProps {
 const FormComponent = ({form, navigation}: IProps) => {
     return (
         <View style={styles.main_wrapper}>
-            <Text style={styles.form_name}>{form.name}</Text>
+            <Text style={styles.form_name}>{form.title}</Text>
             <View style={styles.button_wrapper}>
                 <Pressable style={styles.button_cont} onPress={() => navigation.dispatch(
-                    CommonActions.navigate('ApplyNow')
+                    CommonActions.navigate('ApplyNow', {form: form})
                 )}>
                     <Text style={styles.button_style}>Apply Now</Text>
                 </Pressable>
