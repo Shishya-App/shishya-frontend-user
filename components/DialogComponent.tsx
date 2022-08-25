@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, Dimensions } from "react-native";
 import { Dialog } from '@rneui/themed';
 
 type propTypes = {
@@ -16,6 +16,10 @@ const DialogComponent = ({visible, toggleDialog, dialog, onDone, title}: propTyp
       <Dialog.Title title={title} />
       <Text style={styles.textStyle}>{dialog}</Text>
       <Dialog.Actions>
+      <Dialog.Button
+          title="Cancel"
+          onPress={toggleDialog}
+        />
         <Dialog.Button
           title="Proceed"
           onPress={onDone}

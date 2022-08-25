@@ -1,4 +1,5 @@
 export interface FormData {
-    id?: number;
+    id: number;
     title: string;
+    private: boolean;
   }

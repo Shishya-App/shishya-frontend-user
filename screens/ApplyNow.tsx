@@ -73,7 +73,7 @@ const ApplyNow = ({
             {index >= completeData.length ? (
             <View>
                 {incompleteData.map((item) => (
-                <UncompleteDocs  document={item}/>
+                  <UncompleteDocs  document={item}/>
                 ))}
             </View>
             ) : null}
