@@ -20,6 +20,9 @@ import InitialStartScreen from "./screens/initialStart";
 import Dashboard from "./screens/Dashboard";
 import { useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SingleDocument from "./screens/SingleDocument";
+import Jobs from "./screens/Jobs";
+import SingleJob from "./screens/SingleJob";
 const AppStack = createNativeStackNavigator<AppRoutes>();
 const AuthenticationStack = createNativeStackNavigator<AuthenticationRoutes>();
 
@@ -69,8 +72,17 @@ const App = () => {
             name="Authentication"
             component={AuthenticationNavigator}
           />
-          <AppStack.Screen name="Main" 
+          <AppStack.Screen name="Main"
           component={MainNavigator}
+          />
+          <AppStack.Screen name="Single Document" 
+            component={SingleDocument}
+          />
+          <AppStack.Screen name="Jobs"
+            component={Jobs}
+          />
+          <AppStack.Screen name="Single Job"
+            component={SingleJob}
           />
         </AppStack.Navigator>
       </SafeAreaProvider>

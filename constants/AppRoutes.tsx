@@ -1,5 +1,7 @@
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DocumentData } from "../types/Document";
+import { JobData } from "../types/Job";
 
 export interface StackNavigationProps<
   Paramlist extends ParamListBase,
@@ -10,6 +12,9 @@ export interface StackNavigationProps<
 }
 
 export type AppRoutes = {
-    Authentication: undefined;
-    Main: undefined;
-  };
+  Authentication: undefined;
+  Main: undefined;
+  "Single Document": { document: DocumentData };
+  Jobs: undefined;
+  "Single Job": { job: JobData };
+};
