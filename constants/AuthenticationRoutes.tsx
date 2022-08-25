@@ -14,5 +14,6 @@ export type AuthenticationRoutes = {
     Onboard: undefined;
     Login: undefined;
     Signup: undefined;
+    VerifyOTP: undefined;
     // Dashboard: undefined;
 };

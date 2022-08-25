@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Pressable
 } from "react-native";
 import {
   AuthenticationRoutes,
@@ -36,7 +37,12 @@ const Signup = ({
   //   const res = await signupAPI(username, password, email);
   //   setLoading(loading);
   //   toggleDialog();
-  // };
+  // }; 
+
+  const handleVerifyAadhar = () => {
+
+  }
+
 
   return !loading ? (
     <ScrollView style={styles.main__container}>
@@ -59,22 +65,24 @@ const Signup = ({
               password: "",
               email: "",
               confirmPassword: "",
+              aadharNo: "",
             }}
             onSubmit={async (values) => {
-              setLoading(true);
-              const res = await signupAPI(
-                values.username,
-                values.password,
-                values.email
-              );
-              if (!res.isErr) {
-                console.log("SIGNUP RES: ", res);
-                setLoading(false);
-                toggleDialog();
-              } else {
-                setLoading(false);
-                setErr(true);
-              }
+              // setLoading(true);
+              // const res = await signupAPI(
+              //   values.username,
+              //   values.password,
+              //   values.email
+              // );
+              // if (!res.isErr) {
+              //   console.log("SIGNUP RES: ", res);
+              //   setLoading(false);
+              //   toggleDialog();
+              // } else {
+              //   setLoading(false);
+              //   setErr(true);
+              // }
+              navigation.navigate('VerifyOTP');
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -97,6 +105,23 @@ const Signup = ({
                   keyboardType={"email-address"}
                   onBlur={handleBlur("email")}
                 />
+                <CustomInput
+                  placeholder="Aadhar Number"
+                  setVal={handleChange("aadharNo")}
+                  label={"Aadhar Number"}
+                  error={errors.aadharNo}
+                  isPass={false}
+                  keyboardType={"numeric"}
+                  onBlur={handleBlur("aadharNo")}
+                />
+                
+                {/* <View style={miniButtonstyles.mainBody}>
+                    <TouchableOpacity onPress={handleVerifyAadhar} activeOpacity={0.6} style={miniButtonstyles.buttonBG}>
+                        <Text style={miniButtonstyles.textStyle}>Get OTP</Text>
+                    </TouchableOpacity>
+                </View> */}
+
+
                 <CustomInput
                   placeholder="Password"
                   setVal={handleChange("password")}
@@ -123,7 +148,7 @@ const Signup = ({
                 ) : null}
                 <CustomizedButton
                   handlePress={handleSubmit}
-                  title={"Sign Up"}
+                  title={"Get OTP"}
                 />
               </View>
             )}
@@ -219,4 +244,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     textAlign: "center",
   },
+  getOTP: {
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+  }
 });
+
+
+// const miniButtonstyles = StyleSheet.create({
+//   mainBody: {
+//       width: '100%',
+//       display:'flex',
+//       justifyContent:'center',
+//       // alignItems:'center',
+//       marginBottom: 10,
+//   },
+//   buttonBG: {
+//       width: '50%',
+//       backgroundColor: "#0063F5",
+//       display: "flex",
+//       justifyContent:'center',
+//       alignItems:'center',
+//       borderRadius: 8,
+//       paddingHorizontal: 15,
+//       paddingVertical: 5,
+//       marginVertical: 2
+//   },
+//   textStyle: {
+//       color: 'white',
+//       fontSize: 14,
+//       fontWeight: '700'
+//   }
+// });

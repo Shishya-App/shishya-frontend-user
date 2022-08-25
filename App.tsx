@@ -23,6 +23,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SingleDocument from "./screens/SingleDocument";
 import Jobs from "./screens/Jobs";
 import SingleJob from "./screens/SingleJob";
+import VerifyOTP from "./screens/OTPVerifier";
+import ApplyNow from "./screens/ApplyNow";
 const AppStack = createNativeStackNavigator<AppRoutes>();
 const AuthenticationStack = createNativeStackNavigator<AuthenticationRoutes>();
 
@@ -57,6 +59,7 @@ const App = () => {
         <AuthenticationStack.Screen name="Onboard" component={Onboard}/>
         <AuthenticationStack.Screen name="Login" component={Login} />
         <AuthenticationStack.Screen name="Signup" component={Signup} />
+        <AuthenticationStack.Screen name="VerifyOTP" component={VerifyOTP} />
         {/* <AuthenticationStack.Screen name="Dashboard" component={Dashboard} /> */}
       </AuthenticationStack.Navigator>
     )
@@ -83,6 +86,10 @@ const App = () => {
           />
           <AppStack.Screen name="Single Job"
             component={SingleJob}
+          />
+
+          <AppStack.Screen name="ApplyNow" 
+            component={ApplyNow}
           />
         </AppStack.Navigator>
       </SafeAreaProvider>

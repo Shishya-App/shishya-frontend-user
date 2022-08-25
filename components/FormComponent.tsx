@@ -1,16 +1,21 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CommonActions } from "@react-navigation/native";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import CustomizedButton from "./customizedButton";
+import { BottomTabNavigationProps, DashboardRoutes } from "../constants/DashboardRoutes";
 
 interface IProps {
-    form: any
+    form: any,
+    navigation: BottomTabNavigationProp<DashboardRoutes, "Apply">
 }
-const FormComponent = ({form}: IProps) => {
+const FormComponent = ({form, navigation}: IProps) => {
     return (
         <View style={styles.main_wrapper}>
             <Text style={styles.form_name}>{form.name}</Text>
             <View style={styles.button_wrapper}>
-                <Pressable style={styles.button_cont}>
+                <Pressable style={styles.button_cont} onPress={() => navigation.dispatch(
+                    CommonActions.navigate('ApplyNow')
+                )}>
                     <Text style={styles.button_style}>Apply Now</Text>
                 </Pressable>
             </View>

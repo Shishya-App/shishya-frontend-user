@@ -82,6 +82,7 @@ export const AuthContext = createContext<IAuthContext>({
     const getCurrUser = () => {
 
     }
+    
     const logout = async () => {
       await AsyncStorage.removeItem("@token");
       setToken(null);

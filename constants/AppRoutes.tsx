@@ -17,4 +17,5 @@ export type AppRoutes = {
   "Single Document": { document: DocumentData };
   Jobs: undefined;
   "Single Job": { job: JobData };
+  ApplyNow: undefined
 };

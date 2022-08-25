@@ -2,7 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
 import FormComponent from "../components/FormComponent";
 import { SearchBar } from "@rneui/base";
-
+import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
+import { BottomTabNavigationProps, DashboardRoutes} from "../constants/DashboardRoutes";
 const formData = [
   {
     id: 1,
@@ -37,7 +38,7 @@ const formData = [
     name: "Form 8",
   },
 ];
-const Apply = () => {
+const Apply = ({navigation}: BottomTabNavigationProps<DashboardRoutes, "Apply"> ) => {
   const [searchVal, setSearchVal] = React.useState("");
   return (
     <View style={styles.main_wrapper}>
@@ -63,7 +64,7 @@ const Apply = () => {
           {formData.length > 0 ? (
             <FlatList
               data={formData}
-              renderItem={({ item }) => <FormComponent form={item} />}
+              renderItem={({ item }) => <FormComponent form={item} navigation={navigation}/>}
               keyExtractor={(item) => item.id.toString()}
               showsVerticalScrollIndicator={false}
             />
