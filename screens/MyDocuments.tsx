@@ -1,61 +1,112 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
-import { SearchBar } from "@rneui/base";
+import { SearchBar, Card } from "@rneui/base";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { DashboardRoutes } from "../constants/DashboardRoutes";
+import { CommonActions } from "@react-navigation/native";
+import { CustomDocumentResponse, DocumentData, NADDocumentResponse } from "../types/Document";
+import useAxios from "../hooks/useAxios";
+import { getToken } from "../services/getToken";
+import Loading from "../components/Loading";
 
-interface DocumentData {
-  id: number;
-  title: string;
-  pageCount: number;
-  uri: string;
+interface Props {
+  navigation: BottomTabNavigationProp<
+    DashboardRoutes,
+    "My Documents",
+    undefined
+  >;
 }
 
-const inititalData: DocumentData[] = [
-  {
-    id: 1,
-    title: "10th Gradesheet",
-    pageCount: 2,
-    uri: "https://docs.google.com/gview?embedded=true&url=http://www.africau.edu/images/default/sample.pdf",
-  },
-  {
-    id: 2,
-    title: "11th Gradesheet",
-    pageCount: 1,
-    uri: "https://docs.google.com/gview?embedded=true&url=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    id: 3,
-    title: "12th Gradesheet",
-    pageCount: 1,
-    uri: "https://docs.google.com/gview?embedded=true&url=https://www.clickdimensions.com/links/TestPDFfile.pdf",
-  },
-  {
-    id: 4,
-    title: "13th Gradesheet",
-    pageCount: 1,
-    uri: "https://docs.google.com/gview?embedded=true&url=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    id: 5,
-    title: "14th Gradeshexxxxxxxxxxxxxxxet",
-    pageCount: 2,
-    uri: "https://docs.google.com/gview?embedded=true&url=http://www.africau.edu/images/default/sample.pdf",
-  },
-];
+interface Response {
+  Custom_Document: CustomDocumentResponse[];
+  NAD_Document: NADDocumentResponse[];
+  user: number;
+}
 
-const MyDocuments = () => {
+const MyDocuments: React.FC<Props> = ({ navigation }) => {
   const [searchString, setSearchString] = React.useState<string>("");
-  const [searchResult, setSearchResult] =
-    React.useState<DocumentData[]>(inititalData);
-  const [data, setData] = React.useState<DocumentData[]>(inititalData);
+  const [searchResult, setSearchResult] = React.useState<DocumentData[]>([]);
+  const [data, setData] = React.useState<DocumentData[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  const { execute } = useAxios();
+
+  useEffect(() => {
+    const getDocs = async () => {
+      const token = await getToken();
+      console.log("Token", token);
+      const response = await execute({
+        url: `/userpanel/profile-documents`,
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const res: Response = response.res;
+      const newData: DocumentData[] = [];
+      const customDocs: CustomDocumentResponse[] = res.Custom_Document;
+      const nadDocs: NADDocumentResponse[] = res.NAD_Document;
+
+      // fill NAD data
+      for (const doc of nadDocs) {
+        for (let [key, value] of Object.entries(doc)) {
+          if (key === "user" || key === "id") continue;
+          newData.push({
+            user: res.user,
+            title: key,
+            pageCount: 1,
+            ID: value,
+            custom: false,
+            isVerified: true,
+          });
+        }
+      }
+
+      // fill custom data
+      for (const doc of customDocs) {
+        newData.push({
+          user: doc.user,
+          title: doc.Title,
+          pageCount: doc.PagesNo,
+          ID: doc.id,
+          custom: true,
+          createdAt: doc.upload_time,
+          uri: doc.File,
+          isVerified: doc.isVerified,
+        });
+      }
+      setData(newData);
+      setSearchResult(newData);
+    };
+    getDocs();
+  }, []);
+
+  useEffect(() => {
+    if (data.length > 0) setLoading(false);
+  }, [data]);
 
   useEffect(() => {
     setTimeout(() => {
-      const newData = data.filter((item) => {
-        return item.title.includes(searchString);
-      });
+      console.log(data);
+      const newData = data
+        .filter((item) =>
+          item.title.toLowerCase().includes(searchString.toLowerCase())
+        )
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .sort((a, b) => a.pageCount - b.pageCount);
       setSearchResult(newData);
-    }, 1000);
+    }, 500);
   }, [searchString]);
+
+  const handlePress = (item: DocumentData) => {
+    console.log("handlePress", item);
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: "Single Document",
+        params: {
+          document: item,
+        },
+      })
+    );
+  };
 
   return (
     <View
@@ -74,18 +125,41 @@ const MyDocuments = () => {
         value={searchString}
       />
       <View style={{ flex: 1, marginTop: 20 }}>
-        <FlatList
-          data={searchResult}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={{ marginVertical: 20 }}>
-              <Text>{item.title}</Text>
-              <Text>
-                {item.pageCount === 1 ? `1 Page` : `${item.pageCount} Pages`}
-              </Text>
-            </View>
-          )}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            data={searchResult}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <Pressable onPress={() => handlePress(item)}>
+                {/*// @ts-ignore */}
+                <Card
+                  containerStyle={{
+                    margin: 20,
+                    borderRadius: 20,
+                  }}
+                >
+                  <Card.Title style={{ textAlign: "left" }}>
+                    <Text numberOfLines={1}>{item.title}</Text>
+                  </Card.Title>
+                  <Card.Divider />
+                  <Text
+                    style={{
+                      textAlign: "right",
+                      fontSize: 12,
+                      color: "#888",
+                    }}
+                  >
+                    {item.pageCount === 1
+                      ? `1 Page`
+                      : `${item.pageCount} Pages`}
+                  </Text>
+                </Card>
+              </Pressable>
+            )}
+          />
+        )}
       </View>
     </View>
   );

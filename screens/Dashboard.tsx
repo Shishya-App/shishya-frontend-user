@@ -1,13 +1,31 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CommonActions } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import ArcBackground from "../components/ArcBackground";
 import PdfCarousel from "../components/PdfCarousel";
+import {
+  BottomTabNavigationProps,
+  DashboardRoutes,
+} from "../constants/DashboardRoutes";
 
-const Dashboard = () => {
+const Dashboard = ({
+  navigation,
+}: BottomTabNavigationProps<DashboardRoutes, "Dashboard">) => {
   return (
     <ArcBackground>
       <PdfCarousel />
+      <Pressable
+        onPress={() => {
+          navigation.dispatch(
+            CommonActions.navigate({
+              name: "Jobs",
+            })
+          );
+        }}
+      >
+        <Text>Hello</Text>
+      </Pressable>
     </ArcBackground>
   );
 };
