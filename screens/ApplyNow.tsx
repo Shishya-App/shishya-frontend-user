@@ -6,10 +6,6 @@ import UncompleteDocs from "../components/uncompleteDocs";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
-// console.log("INCOMPLETE DATA: ", incompleteData);
-// console.log("COMPLETE DATA: ", completeData);
-
-
 const ApplyNow = ({ navigation }: StackNavigationProps<AppRoutes, "ApplyNow">) => {
     const [index, setIndex] = React.useState(0);
     
@@ -55,9 +51,6 @@ const ApplyNow = ({ navigation }: StackNavigationProps<AppRoutes, "ApplyNow">) =
         <SafeAreaView>
             <View>
             <Text>Apply Now</Text>
-            {/* <Text>
-                {completeData[index % completeData.length]}
-            </Text> */}
             {
                 completeData.filter((item, idx) => idx < index).map((item) => <CompleteDocs />)
             }
