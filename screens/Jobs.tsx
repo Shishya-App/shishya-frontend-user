@@ -26,6 +26,7 @@ const jobData: JobData[] = [
     applicationStatus: "Pending",
     salary: "$135k",
     description: "Please give me this job, pretty please",
+    isFellowship: false,
   },
   {
     title: "Product Designer",
@@ -34,23 +35,36 @@ const jobData: JobData[] = [
     applicationStatus: "Not Applied",
     salary: "$165k",
     description: "Google toh bhai, company out of bounds",
+    isFellowship: false,
   },
 ];
 
-const Jobs = ({ navigation }: StackNavigationProps<AppRoutes, "Jobs">) => {
+const Jobs = ({
+  navigation,
+  route,
+}: StackNavigationProps<AppRoutes, "Jobs">) => {
   const [data, setData] = React.useState<JobData[]>([]);
   const [searchResult, setSearchResult] = React.useState<JobData[]>([]);
+  const { type } = route.params;
 
   React.useEffect(() => {
     setData(jobData);
-    setSearchResult(jobData);
   }, []);
 
+  React.useEffect(() => {
+    handleSearch("");
+  }, [data]);
+
   const handleSearch = (text: string) => {
-    const result = jobData.filter((job) =>
-      job.title.toLowerCase().includes(text.toLowerCase())
+    const lower = text.toLowerCase();
+    const result = data.filter((job) =>
+      job.title.toLowerCase().includes(lower)
     );
-    setSearchResult(result);
+    if (type === "Fellowship") {
+      setSearchResult(result.filter((item) => item.isFellowship));
+    } else {
+      setSearchResult(result.filter((item) => !item.isFellowship));
+    }
   };
 
   const getIconName = (status: ApplicationStatus) => {
@@ -94,11 +108,12 @@ const Jobs = ({ navigation }: StackNavigationProps<AppRoutes, "Jobs">) => {
           marginTop: 6,
         }}
       >
-        {searchResult.length} relevant jobs found
+        {searchResult.length} relevant{" "}
+        {type === "Fellowship" ? "fellowships/grants" : "jobs"} found
       </Text>
       <FlatList
         data={searchResult}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {

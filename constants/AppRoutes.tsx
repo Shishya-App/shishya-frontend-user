@@ -15,7 +15,7 @@ export type AppRoutes = {
   Authentication: undefined;
   Main: undefined;
   "Single Document": { document: DocumentData };
-  Jobs: undefined;
+  Jobs: { type: "Job" | "Fellowship" };
   "Single Job": { job: JobData };
-  ApplyNow: {form: FormData}
+  ApplyNow: { form: FormData };
 };

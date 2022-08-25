@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CommonActions } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
@@ -120,6 +121,36 @@ const DashboardTitle = ({ text }: { text: string }) => {
   );
 };
 
+interface ViewAllButtonProps {
+  navigation: BottomTabNavigationProp<DashboardRoutes, "Dashboard">;
+  type: "Job" | "Fellowship";
+}
+
+const ViewAllButton: React.FC<ViewAllButtonProps> = ({ navigation, type }) => {
+  return (
+    <Pressable
+      onPress={() => {
+        navigation.dispatch(
+          CommonActions.navigate({
+            name: "Jobs",
+            params: { type },
+          })
+        );
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 14,
+          color: "#5D5AFF",
+          marginRight: 10,
+        }}
+      >
+        View All
+      </Text>
+    </Pressable>
+  );
+};
+
 const Dashboard = ({
   navigation,
 }: BottomTabNavigationProps<DashboardRoutes, "Dashboard">) => {
@@ -131,68 +162,18 @@ const Dashboard = ({
       <GestureHandlerRootView>
         <ApplicationRequests navigation={navigation} />
       </GestureHandlerRootView>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.jobWrapper}>
         <DashboardTitle text="Job Openings" />
-        <Pressable
-          onPress={() => {
-            navigation.dispatch(
-              CommonActions.navigate({
-                name: "Jobs",
-              })
-            );
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 14,
-              color: "#5D5AFF",
-              marginRight: 10,
-            }}
-          >
-            View All
-          </Text>
-        </Pressable>
+        <ViewAllButton navigation={navigation} type="Job" />
       </View>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={{ paddingVertical: 10 }}>
         <JobOpeningsCarousel navigation={navigation} data={jobsdata} />
       </GestureHandlerRootView>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.jobWrapper}>
         <DashboardTitle text="Fellowships/Grants" />
-        <Pressable
-          onPress={() => {
-            navigation.dispatch(
-              CommonActions.navigate({
-                name: "Jobs",
-              })
-            );
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 14,
-              color: "#5D5AFF",
-              marginRight: 10,
-            }}
-          >
-            View All
-          </Text>
-        </Pressable>
+        <ViewAllButton navigation={navigation} type="Fellowship" />
       </View>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={{ paddingVertical: 10 }}>
         <JobOpeningsCarousel navigation={navigation} data={FellowShips} />
       </GestureHandlerRootView>
     </ArcBackground>
@@ -206,10 +187,10 @@ Dashboard.defaultProps = {
 export default Dashboard;
 
 const styles = StyleSheet.create({
-  textStyle: {
-    color: "black",
-    fontSize: 24,
-    fontWeight: "700",
-    textAlign: "center",
+  jobWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });

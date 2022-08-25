@@ -4,7 +4,6 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { DashboardRoutes } from "../constants/DashboardRoutes";
 import Carousel from "react-native-reanimated-carousel";
 
-const color = ["#FFD1D1", "#FBE8CB"];
 interface Props {
   navigation: BottomTabNavigationProp<DashboardRoutes, "Dashboard", undefined>;
   data: {
@@ -21,16 +20,14 @@ const JobOpeningsCarousel: React.FC<Props> = ({ navigation, data }) => {
       height={75}
       loop={true}
       style={{ width: "100%" }}
-      autoPlay={true}
-      autoPlayInterval={1000}
       data={data}
       pagingEnabled={true}
-      renderItem={({ item, index }) => (
+      renderItem={({ item }) => (
         <View
           style={{
             flex: 1,
-            marginLeft: "5%",
-            backgroundColor: color[index % 2],
+            marginLeft: 20,
+            backgroundColor: "white",
             borderRadius: 10,
             display: "flex",
             flexDirection: "row",

@@ -25,8 +25,6 @@ const data = [
   },
 ];
 
-const colors: string[] = ["#FBE8CB", "#BAE8CC", "#C6F4F6", "#FFB8B8"];
-
 interface Props {
   navigation: BottomTabNavigationProp<DashboardRoutes, "Dashboard", undefined>;
 }
@@ -47,8 +45,12 @@ const ApplicationRequests: React.FC<Props> = ({ navigation }) => {
         <View
           style={{
             flex: 1,
-            backgroundColor: colors[index],
+            backgroundColor: "#FFFFFF",
             borderRadius: 10,
+            shadowOffset: { width: 0, height: 2 },
+            shadowColor: "#000",
+            shadowOpacity: 0.8,
+            elevation: 5,
           }}
         >
           <View
