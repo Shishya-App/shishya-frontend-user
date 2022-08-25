@@ -7,6 +7,7 @@ import { DashboardRoutes } from "../constants/DashboardRoutes";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { CommonActions } from "@react-navigation/native";
+import Arrow from "../components/Arrow";
 
 const ITEM_WIDTH = WIDTH * 0.8;
 
@@ -67,17 +68,6 @@ const profileLinkData: LinkData[] = [
     route: "Apply",
   },
 ];
-
-const Arrow: React.FC = () => {
-  return (
-    <MaterialIcons
-      name="arrow-forward-ios"
-      size={24}
-      color="black"
-      style={styles.arrow}
-    />
-  );
-};
 
 const HR: React.FC = () => {
   return <View style={styles.line} />;
@@ -182,9 +172,6 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  arrow: {
-    marginLeft: "auto",
   },
   line: {
     borderBottomColor: "#C4C4C4",

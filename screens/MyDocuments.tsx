@@ -1,13 +1,19 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
-import { SearchBar, Card } from "@rneui/base";
+import { Card } from "@rneui/base";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { DashboardRoutes } from "../constants/DashboardRoutes";
 import { CommonActions } from "@react-navigation/native";
-import { CustomDocumentResponse, DocumentData, NADDocumentResponse } from "../types/Document";
+import {
+  CustomDocumentResponse,
+  DocumentData,
+  NADDocumentResponse,
+} from "../types/Document";
 import useAxios from "../hooks/useAxios";
 import { getToken } from "../services/getToken";
 import Loading from "../components/Loading";
+import Arrow from "../components/Arrow";
+import SearchBar from "../components/SearchBar";
 
 interface Props {
   navigation: BottomTabNavigationProp<
@@ -24,7 +30,6 @@ interface Response {
 }
 
 const MyDocuments: React.FC<Props> = ({ navigation }) => {
-  const [searchString, setSearchString] = React.useState<string>("");
   const [searchResult, setSearchResult] = React.useState<DocumentData[]>([]);
   const [data, setData] = React.useState<DocumentData[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -83,19 +88,6 @@ const MyDocuments: React.FC<Props> = ({ navigation }) => {
     if (data.length > 0) setLoading(false);
   }, [data]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(data);
-      const newData = data
-        .filter((item) =>
-          item.title.toLowerCase().includes(searchString.toLowerCase())
-        )
-        .sort((a, b) => a.title.localeCompare(b.title))
-        .sort((a, b) => a.pageCount - b.pageCount);
-      setSearchResult(newData);
-    }, 500);
-  }, [searchString]);
-
   const handlePress = (item: DocumentData) => {
     console.log("handlePress", item);
     navigation.dispatch(
@@ -108,22 +100,23 @@ const MyDocuments: React.FC<Props> = ({ navigation }) => {
     );
   };
 
+  const handleSearch = (text: string) => {
+    const newData = data
+      .filter((item) => item.title.toLowerCase().includes(text.toLowerCase()))
+      .sort((a, b) => a.title.localeCompare(b.title))
+      .sort((a, b) => a.pageCount - b.pageCount);
+    setSearchResult(newData);
+  };
+
   return (
     <View
       style={{
         flex: 1,
         marginTop: 50,
-        marginHorizontal: 20,
+        marginHorizontal: 10,
       }}
     >
-      <SearchBar
-        platform="android"
-        onChangeText={(text) => setSearchString(text)}
-        placeholder="Search"
-        placeholderTextColor="#888"
-        autoCorrect
-        value={searchString}
-      />
+      <SearchBar handleSearch={handleSearch} />
       <View style={{ flex: 1, marginTop: 20 }}>
         {loading ? (
           <Loading />
@@ -134,28 +127,42 @@ const MyDocuments: React.FC<Props> = ({ navigation }) => {
             renderItem={({ item }) => (
               <Pressable onPress={() => handlePress(item)}>
                 {/*// @ts-ignore */}
-                <Card
-                  containerStyle={{
-                    margin: 20,
-                    borderRadius: 20,
+                <View
+                  style={{
+                    backgroundColor: "#EEEEEE",
+                    marginHorizontal: 20,
+                    marginVertical: 10,
+                    borderRadius: 12,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: 10,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.1,
+                    elevation: 5,
                   }}
                 >
-                  <Card.Title style={{ textAlign: "left" }}>
-                    <Text numberOfLines={1}>{item.title}</Text>
-                  </Card.Title>
-                  <Card.Divider />
-                  <Text
-                    style={{
-                      textAlign: "right",
-                      fontSize: 12,
-                      color: "#888",
-                    }}
-                  >
-                    {item.pageCount === 1
-                      ? `1 Page`
-                      : `${item.pageCount} Pages`}
-                  </Text>
-                </Card>
+                  <View>
+                    <Card.Title style={{ textAlign: "left" }}>
+                      <Text numberOfLines={1}>{item.title}</Text>
+                    </Card.Title>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: "#888",
+                      }}
+                    >
+                      {item.pageCount === 1
+                        ? `1 Page`
+                        : `${item.pageCount} Pages`}
+                    </Text>
+                  </View>
+                  <Arrow />
+                </View>
               </Pressable>
             )}
           />
