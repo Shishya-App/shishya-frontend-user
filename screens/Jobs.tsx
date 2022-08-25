@@ -7,11 +7,12 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Card, SearchBar } from "@rneui/base";
+import { Card } from "@rneui/base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApplicationStatus, JobData } from "../types/Job";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
 import { Ionicons } from "@expo/vector-icons";
+import SearchBar from "../components/SearchBar";
 
 // job
 // image
@@ -81,37 +82,7 @@ const Jobs = ({ navigation }: StackNavigationProps<AppRoutes, "Jobs">) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ marginTop: 10 }}>
-        <SearchBar
-          platform="android"
-          placeholder="Search"
-          placeholderTextColor="white"
-          inputStyle={{ color: "white" }}
-          containerStyle={{
-            backgroundColor: "#5D5AFF",
-            marginHorizontal: 20,
-            borderRadius: 20,
-          }}
-          searchIcon={{
-            type: "material-community",
-            name: "magnify",
-            color: "white",
-          }}
-          cancelIcon={{
-            type: "material-community",
-            name: "keyboard-backspace",
-            color: "white",
-          }}
-          clearIcon={{
-            type: "material-community",
-            name: "close",
-            color: "white",
-          }}
-          inputContainerStyle={{
-            backgroundColor: "#5D5AFF",
-            borderRadius: 20,
-          }}
-          onChangeText={(text) => handleSearch(text)}
-        />
+        <SearchBar handleSearch={handleSearch} />
       </View>
       <Text
         style={{
