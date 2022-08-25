@@ -139,9 +139,11 @@ const Apply = ({
             data={searchResult}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <FormComponent form={item} navigation={navigation} onPress={selectedForm?.private ? () => showDialog(item) : () => navigation.dispatch(CommonActions.navigate('ApplyNow', {form: item}))}/>
+              <FormComponent form={item} navigation={navigation} onPress={item?.private ? () => showDialog(item) : () => navigation.dispatch(CommonActions.navigate('ApplyNow', {form: item}))}/>
             )}
           />
+      </SafeAreaView>
+      <>
           {
             visible && selectedForm?.private ? (
               <DialogComponent
@@ -153,7 +155,7 @@ const Apply = ({
               />
             ) : null
           }
-      </SafeAreaView>
+      </>
     </ArcBackground>
   );
 };

@@ -16,7 +16,7 @@ interface Props {
 const JobOpeningsCarousel: React.FC<Props> = ({ navigation, data }) => {
   return (
     <Carousel
-      width={Dimensions.get("window").width * 0.5}
+      width={Dimensions.get("window").width * 0.6}
       height={75}
       loop={true}
       style={{ width: "100%" }}
