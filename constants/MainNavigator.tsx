@@ -13,8 +13,7 @@ import { Text, SafeAreaView } from "react-native";
 import UploadDocuments from "../screens/UploadDocuments";
 import Profile from "../screens/Profile";
 import MyDocuments from "../screens/MyDocuments";
-
-const Apply = () => <Text>Apply</Text>;
+import Apply from "../screens/Apply";
 
 const TabNavigator = createBottomTabNavigator<DashboardRoutes>();
 
