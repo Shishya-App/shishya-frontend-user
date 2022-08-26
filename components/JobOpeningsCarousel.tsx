@@ -1,8 +1,16 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { DashboardRoutes } from "../constants/DashboardRoutes";
 import Carousel from "react-native-reanimated-carousel";
+import { CommonActions } from "@react-navigation/native";
 
 interface Props {
   navigation: BottomTabNavigationProp<DashboardRoutes, "Dashboard", undefined>;
@@ -11,9 +19,10 @@ interface Props {
     position: string;
     image: string;
   }[];
+  type: "Job" | "Fellowship";
 }
 
-const JobOpeningsCarousel: React.FC<Props> = ({ navigation, data }) => {
+const JobOpeningsCarousel: React.FC<Props> = ({ navigation, data, type }) => {
   return (
     <Carousel
       width={Dimensions.get("window").width * 0.6}
@@ -23,7 +32,17 @@ const JobOpeningsCarousel: React.FC<Props> = ({ navigation, data }) => {
       data={data}
       pagingEnabled={true}
       renderItem={({ item }) => (
-        <View
+        <Pressable
+          onPress={() => {
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: "Jobs",
+                params: {
+                  type,
+                },
+              })
+            );
+          }}
           style={{
             flex: 1,
             marginLeft: 20,
@@ -53,7 +72,7 @@ const JobOpeningsCarousel: React.FC<Props> = ({ navigation, data }) => {
               {item.position}
             </Text>
           </View>
-        </View>
+        </Pressable>
       )}
     />
   );

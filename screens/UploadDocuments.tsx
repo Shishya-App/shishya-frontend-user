@@ -23,6 +23,7 @@ const UploadDocuments = ({ visible, onClose }: ModalProps) => {
   const [fileResponse, setFileResponse] =
     React.useState<null | DocumentPicker.DocumentResult>(null);
   const [error, setError] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
   const { execute } = useAxios();
 
   const handleError = () => {
@@ -97,7 +98,7 @@ const UploadDocuments = ({ visible, onClose }: ModalProps) => {
           },
         });
         if (response.isErr) throw new Error("Error uploading file");
-        onClose();
+        setSuccess(true);
         console.log(response);
       } catch (err) {
         console.log(err);
@@ -128,6 +129,11 @@ const UploadDocuments = ({ visible, onClose }: ModalProps) => {
               {error && (
                 <Text style={[styles.subText, styles.error]}>
                   Error while uploading file please try again!
+                </Text>
+              )}
+              {success && (
+                <Text style={[styles.subText, styles.success]}>
+                  File uploaded successfully!
                 </Text>
               )}
               {fileResponse && fileResponse?.type === "success" && (
@@ -186,5 +192,8 @@ const styles = StyleSheet.create({
   },
   error: {
     color: "#FF0000",
+  },
+  success: {
+    color: "#298D51",
   },
 });

@@ -7,6 +7,7 @@ import {
   Pressable,
   ScrollView,
   TextInput,
+  Dimensions,
 } from "react-native";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
 import CustomizedButton from "../components/customizedButton";
@@ -16,6 +17,7 @@ import { Formik } from "formik";
 import LoadingAPIS from "../components/LoadingApis";
 import { CommonActions } from "@react-navigation/native";
 import CustomTextInput from "../components/CustomTextInput";
+import LottieView from "lottie-react-native";
 
 const Login = ({
   navigation,
@@ -37,7 +39,13 @@ const Login = ({
           <Image source={require("../assets/images/User.png")} />
         </View>
         <View style={styles.image__container}>
-          <Image source={require("../assets/images/loginBack.png")} />
+          <LottieView
+            source={require("../assets/lottie/login.json")}
+            style={{ width: Dimensions.get("window").width / 1.25 }}
+            autoPlay
+            duration={10000}
+            loop={false}
+          />
         </View>
         <View style={styles.secondaryContainer}>
           <Formik
@@ -156,6 +164,9 @@ const styles = StyleSheet.create({
     width: "100%",
     marginHorizontal: 20,
     marginVertical: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   secondaryContainer: {
     width: "100%",
