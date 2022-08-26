@@ -18,12 +18,20 @@ import CustomInput from "../components/input";
 import { OTPValidationSchema } from "../utils/validations/AuthValidations";
 import { Formik } from "formik";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { AuthContext } from "../store/AuthContext";
 const VerifyOTP = ({
   navigation,
+  route
 }: StackNavigationProps<AuthenticationRoutes, "Signup">) => {
+  const { verifyOTP } = useContext(AuthContext);
   const [err, setErr] = React.useState(false);
   const [timer, setTimer] = React.useState(120);
+  const [loading, setLoading] = React.useState(false);
+
+  // @ts-ignore
+  const {res} = route.params;
+
+  // console.log("OTP PARAMS: ", res);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,6 +44,7 @@ const VerifyOTP = ({
   const resendOTP = () => {};
 
   return (
+    !loading ? 
     <ScrollView style={styles.main__container}>
       <View style={styles.main__container}>
         <ImageBackground
@@ -73,13 +82,20 @@ const VerifyOTP = ({
                 otp: "",
                 }}
                 onSubmit={async (values) => {
-                //   todo -> handle API call here
-                console.log(values);
-                if (values.otp === TEMP_OTP) {
-                    navigation.navigate("Login");
-                } else {
+                  setLoading(true);
+                  const ress = await verifyOTP(
+                    res?.res?.id,
+                    values.otp
+                  );
+                  if (!ress.isErr) {
+                    console.log("OTP RES: ", ress);
+                    setLoading(false);
+                    navigation.navigate('Login');
+                  } else {
+                    console.log("RES.ERR: ", ress.res);
+                    setLoading(false);
                     setErr(true);
-                }
+                  }
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -143,6 +159,8 @@ const VerifyOTP = ({
         </ImageBackground>
       </View>
     </ScrollView>
+    :
+    <LoadingAPIS dialog="Please wait while we validate you..."/>
   );
 };
 

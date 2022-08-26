@@ -1,7 +1,9 @@
 export interface IUser {
-    _id: string;
-    username: string;
-    email: string;
-    password: string;
-    __v: number;
+    age: number,
+    documentField: number,
+    id: number,
+    name: string,
+    user: number,
+    // dob: string,
+    // adhaarNo: string,
 }

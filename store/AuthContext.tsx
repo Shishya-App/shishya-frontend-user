@@ -9,9 +9,10 @@ export const AuthContext = createContext<IAuthContext>({
     user: null,
     login: async () => {},
     loginAPI:  async (username: string, password: string) => {},
-    signupAPI: async (username: string, password: string, email: string) => {},
+    signupAPI: async (username: string, password: string, email: string, firstName: string, lastName: string, adhaarNo: string) => {},
     logout: async () => {},
     verifyOTP:  async (id: number, otp: string) => {},
+    getCurrUser: async () => {},
     token: null,
   });
   
@@ -43,9 +44,14 @@ export const AuthContext = createContext<IAuthContext>({
         if(!res.isErr){
           await AsyncStorage.setItem("@token", res.res.tokens.access);
           setToken(res?.res?.tokens?.access);
-          return {
-            isErr: false,
-            res: res.res,
+
+          const currUserRes = await getCurrUser();
+
+          if(currUserRes?.isErr === false){
+            return {
+              isErr: false,
+              res: res.res,
+            }
           }
         } else{
           return {
@@ -55,12 +61,17 @@ export const AuthContext = createContext<IAuthContext>({
         }
     }
 
-    const signupAPI = async (username: string, password: string, email: string) => {
+    const signupAPI = async (username: string, password: string, email: string, firstName: string, lastName: string, adhaarNo: string) => {
       const data = {
         username: username,
         email: email,
         password: password,
+        first_name: firstName,
+        last_name: lastName,
+        adhaar_no: adhaarNo,
       };
+
+      console.log("DATA: ", data);
         const res = await execute({
           method: "POST",
           url: `register/`,
@@ -83,11 +94,13 @@ export const AuthContext = createContext<IAuthContext>({
     const verifyOTP = async (id: number, otp: string) => {
       const data = {
         id: id,
-        otp: otp,
+        OTP: otp,
       };
+
+      console.log("DATA: ", data);
         const res = await execute({
           method: "POST",
-          url: `verify/`,
+          url: `verify-otp/`,
           data: data,
         });
         if(!res.isErr){
@@ -103,8 +116,31 @@ export const AuthContext = createContext<IAuthContext>({
         }
     }
 
-    const getCurrUser = () => {
+    const getCurrUser = async () => {
+      const tokenn = await AsyncStorage.getItem('@token');
+      const res = await execute({
+        method: "GET",
+        url: `adminpanel/personal-details/`,
+        headers: {
+          Authorization: `Bearer ${tokenn}`,
+        }
+      });
+      if(!res.isErr){
+        console.log('RES: ', res?.res?.personal_details[0]);
+        setUser(res?.res?.personal_details[0]);
+        await AsyncStorage.setItem('@user', JSON.stringify(res?.res?.personal_details[0]));
+        return {
+          isErr: false,
+          res: res.res,
+        }
+      } else {
+        console.log('ERR: ', res);
 
+        return {
+          isErr: true,
+          res: res.res,
+        }
+      }
     }
     
     const logout = async () => {

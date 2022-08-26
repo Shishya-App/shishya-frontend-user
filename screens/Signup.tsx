@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Pressable
+  Pressable,
+  TextInput
 } from "react-native";
 import {
   AuthenticationRoutes,
@@ -16,13 +17,21 @@ import CustomizedButton from "../components/customizedButton";
 import LoadingAPIS from "../components/LoadingApis";
 import DialogComponent from "../components/DialogComponent";
 import { AuthContext } from "../store/AuthContext";
-import CustomInput from "../components/input";
+// import CustomInput from "../components/input";
+import CustomTextInput from "../components/CustomTextInput";
 import { signUpValidationSchema } from "../utils/validations/AuthValidations";
 import { Formik } from "formik";
 
 const Signup = ({
   navigation,
 }: StackNavigationProps<AuthenticationRoutes, "Signup">) => {
+  const lastName = useRef<TextInput>(null);
+  const username = useRef<TextInput>(null);
+  const email = useRef<TextInput>(null);
+  const adhaar = useRef<TextInput>(null);
+  const password = useRef<TextInput>(null);
+  const confirmPassword = useRef<TextInput>(null);
+
   const { signupAPI } = useContext(AuthContext);
 
   const [visible, setVisible] = React.useState(false);
@@ -54,54 +63,112 @@ const Signup = ({
               password: "",
               email: "",
               confirmPassword: "",
-              aadharNo: "",
+              firstName: "",
+              lastName: "",
+              adhaarNo: ""
             }}
             onSubmit={async (values) => {
               setLoading(true);
               const res = await signupAPI(
                 values.username,
                 values.password,
-                values.email
+                values.email,
+                values.firstName,
+                values.lastName,
+                values.adhaarNo
               );
               if (!res.isErr) {
                 console.log("SIGNUP RES: ", res);
                 setLoading(false);
-                toggleDialog();
+                // toggleDialog();
                 navigation.navigate('VerifyOTP', {res: res});
               } else {
+                console.log("RES ERR: ", res.res);
                 setLoading(false);
                 setErr(true);
               }
             }}
           >
-            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
               <View style={styles.inputs__wrapper}>
-                <CustomInput
+                <CustomTextInput
+                  label="First Name"
+                  keyboardType="default"
+                  placeholder="First Name"
+                  onChangeText={handleChange("firstName")}
+                  onBlur={handleBlur("firstName")}
+                  error={errors.firstName}
+                  touched={touched.firstName}
+                  autoComplete="name"
+                  autoCapitalize="words"
+                  returnKeyType="next"
+                  returnKeyLabel="Next"
+                  onSubmitEditing={() => lastName.current?.focus()}
+                  blurOnSubmit={false}
+                />
+                <CustomTextInput
+                  label="Last Name"
+                  keyboardType="default"
+                  placeholder="Last Name"
+                  onChangeText={handleChange("lastName")}
+                  onBlur={handleBlur("lastName")}
+                  error={errors.lastName}
+                  touched={touched.lastName}
+                  autoComplete="name-family"
+                  autoCapitalize="words"
+                  returnKeyType="next"
+                  returnKeyLabel="Next"
+                  onSubmitEditing={() => username.current?.focus()}
+                  blurOnSubmit={false}
+                  ref={lastName}
+                />
+                <CustomTextInput
+                  label="Username"
+                  keyboardType="default"
                   placeholder="Username"
-                  setVal={handleChange("username")}
-                  label={"Username"}
-                  isPass={false}
-                  keyboardType={"default"}
+                  onChangeText={handleChange("username")}
                   onBlur={handleBlur("username")}
                   error={errors.username}
+                  touched={touched.username}
+                  autoComplete="name"
+                  autoCapitalize="words"
+                  returnKeyType="next"
+                  returnKeyLabel="Next"
+                  onSubmitEditing={() => email.current?.focus()}
+                  blurOnSubmit={false}
+                  ref={username}
                 />
-                <CustomInput
-                  placeholder="Email"
-                  setVal={handleChange("email")}
-                  label={"Email"}
-                  error={errors.email}
-                  isPass={false}
-                  keyboardType={"email-address"}
+                <CustomTextInput
+                  label="Email ID"
+                  keyboardType="email-address"
+                  placeholder="Email ID"
+                  onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
+                  error={errors.email}
+                  touched={touched.email}
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  returnKeyLabel="Next"
+                  onSubmitEditing={() => adhaar.current?.focus()}
+                  blurOnSubmit={false}
+                  ref={email}
                 />
-                <CustomInput
-                  placeholder="Aadhar Number"
-                  setVal={handleChange("aadharNo")}
-                  label={"Aadhar Number"}
-                  error={errors.aadharNo}
-                  isPass={false}
-                  keyboardType={"numeric"}
-                  onBlur={handleBlur("aadharNo")}
+                <CustomTextInput
+                 label="Adhaar Number"
+                 keyboardType="numeric"
+                 placeholder="Adhaar Number"
+                 onChangeText={handleChange("adhaarNo")}
+                 onBlur={handleBlur("adhaarNo")}
+                 error={errors.adhaarNo}
+                 touched={touched.adhaarNo}
+                 autoComplete="off"
+                 autoCapitalize="none"
+                 returnKeyType="next"
+                 returnKeyLabel="Next"
+                 onSubmitEditing={() => password.current?.focus()}
+                 blurOnSubmit={false}
+                 ref={adhaar}
                 />
                 
                 {/* <View style={miniButtonstyles.mainBody}>
@@ -111,23 +178,39 @@ const Signup = ({
                 </View> */}
 
 
-                <CustomInput
+                <CustomTextInput
+                  label="Password"
+                  keyboardType="default"
                   placeholder="Password"
-                  setVal={handleChange("password")}
-                  label={"Password"}
-                  error={errors.password}
-                  isPass={true}
-                  keyboardType={undefined}
+                  onChangeText={handleChange("password")}
                   onBlur={handleBlur("password")}
+                  error={errors.password}
+                  touched={touched.password}
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  returnKeyLabel="Next"
+                  onSubmitEditing={() => confirmPassword.current?.focus()}
+                  blurOnSubmit={false}
+                  ref={password}
+                  secureTextEntry
                 />
-                <CustomInput
+                <CustomTextInput
+                  label="Confirm Password"
+                  keyboardType="default"
                   placeholder="Confirm Password"
-                  setVal={handleChange("confirmPassword")}
-                  label={"Confirm Password"}
-                  error={errors.confirmPassword}
-                  isPass={true}
-                  keyboardType={undefined}
+                  onChangeText={handleChange("confirmPassword")}
                   onBlur={handleBlur("confirmPassword")}
+                  error={errors.confirmPassword}
+                  touched={touched.confirmPassword}
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  returnKeyType="go"
+                  returnKeyLabel="Submit"
+                  onSubmitEditing={() => handleSubmit()}
+                  blurOnSubmit={false}
+                  ref={confirmPassword}
+                  secureTextEntry
                 />
 
                 {err ? (
@@ -149,13 +232,13 @@ const Signup = ({
             </TouchableOpacity>
           </View>
 
-          <DialogComponent
+          {/* <DialogComponent
             dialog="An email has been sent to your email address. Please follow the link to confirm your account."
             onDone={() => navigation.navigate("Login")}
             title={"Confirm Email..."}
             toggleDialog={toggleDialog}
             visible={visible}
-          />
+          /> */}
         </View>
       </View>
     </ScrollView>
