@@ -73,8 +73,8 @@ const ApplyNow = ({
             <Text style={{marginVertical: 10, fontSize: 20, fontWeight: '500', marginBottom: 20, color: 'grey'}}>Following documents need to be uploaded</Text>
             {index >= completeData.length ? (
             <View>
-                {incompleteData.map((item) => (
-                  <UncompleteDocs  document={item}/>
+                {incompleteData.map((item, index) => (
+                  <UncompleteDocs key={index} document={item}/>
                 ))}
             </View>
             ) : null}

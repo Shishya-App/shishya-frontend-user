@@ -20,7 +20,12 @@ const TabNavigator = createBottomTabNavigator<DashboardRoutes>();
 const MainNavigator = () => {
   const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(true);
 
-  const UpploadDocumentsModal = () => <UploadDocuments visible={modalIsOpen} />;
+  const UpploadDocumentsModal = () => (
+    <UploadDocuments
+      visible={modalIsOpen}
+      onClose={() => setModalIsOpen(false)}
+    />
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

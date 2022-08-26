@@ -21,7 +21,7 @@ const CompleteDocs = ({ docArr }: IProps) => {
     <View>
       {docArr.map((document: IDOCProps, idx: number) => (
         index >= idx &&
-        <View style={{ marginBottom: 5, marginVertical: 20 }}>
+        <View key={idx} style={{ marginBottom: 5, marginVertical: 20 }}>
           <View
             style={{
               display: "flex",

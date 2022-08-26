@@ -10,15 +10,20 @@ import {
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import PdfPreview from "../components/PdfPreview";
+import CustomizedButton from "../components/customizedButton";
+import useAxios from "../hooks/useAxios";
+import { getToken } from "../services/getToken";
 
 interface ModalProps {
   visible: boolean;
+  onClose: () => void;
 }
 
-const UploadDocuments = ({ visible }: ModalProps) => {
+const UploadDocuments = ({ visible, onClose }: ModalProps) => {
   const [fileResponse, setFileResponse] =
     React.useState<null | DocumentPicker.DocumentResult>(null);
   const [error, setError] = React.useState<boolean>(false);
+  const { execute } = useAxios();
 
   const handleError = () => {
     setFileResponse(null);
@@ -61,6 +66,48 @@ const UploadDocuments = ({ visible }: ModalProps) => {
     }).start();
   }, [visible]);
 
+  const handleSubmit = () => {
+    if (fileResponse?.type !== "success") return;
+    const data = new FormData();
+
+    data.append("File", {
+      // @ts-ignore
+      name: fileResponse.name,
+      type: "application/pdf",
+      uri: fileResponse.uri,
+    });
+    data.append("PagesNo", "1");
+    data.append("Title", fileResponse.name.replace(".pdf", ""));
+    data.append("user", "1");
+
+    console.log(data);
+
+    const uploadFile = async () => {
+      try {
+        console.log("uploading file", fileResponse);
+        const token = await getToken();
+        console.log("Bearer", token);
+        const response = await execute({
+          method: "POST",
+          url: "userpanel/custom-document/",
+          data,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "content-Type": "multipart/form-data",
+          },
+        });
+        if (response.isErr) throw new Error("Error uploading file");
+        onClose();
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+        handleError();
+      }
+    };
+
+    uploadFile();
+  };
+
   return (
     <>
       {visible && (
@@ -93,6 +140,7 @@ const UploadDocuments = ({ visible }: ModalProps) => {
                     uri={fileResponse.uri}
                     height={Dimensions.get("window").width / 1.25}
                   />
+                  <CustomizedButton title="Upload" handlePress={handleSubmit} />
                 </>
               )}
             </View>

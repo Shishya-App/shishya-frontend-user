@@ -13,6 +13,7 @@ const useAxios = () => {
             };
 
         } catch(err) {
+            console.log(JSON.stringify(err));
             return {
                 isErr: true,
                 res: err as Error
