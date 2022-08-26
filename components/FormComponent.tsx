@@ -7,9 +7,9 @@ import {
   DashboardRoutes,
 } from "../constants/DashboardRoutes";
 import { Entypo } from "@expo/vector-icons";
-
+import {FormData} from "../types/Form";
 interface IProps {
-  form: any;
+  form: FormData;
   navigation: BottomTabNavigationProp<DashboardRoutes, "Apply">;
   onPress: () => void;
 }
@@ -42,12 +42,17 @@ const FormComponent = ({ form, navigation, onPress }: IProps) => {
         </View>
       </View>
       {open ? (
-        <Text style={{fontSize: 14, marginTop: 10}}>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae,
-          necessitatibus neque non excepturi dolorum officia molestias modi nisi
-          sunt. Minus dolorem explicabo mollitia libero ipsum error minima harum
-          exercitationem consequuntur.
-        </Text>
+        <View style={{marginTop: 10}}>
+          <Text style={{fontSize: 14, fontWeight: '500'}}>
+            Deadline - {form.deadline}
+          </Text>
+          <Text style={{fontSize: 14, fontWeight: '500'}}>
+            Owner - {form.owner}
+          </Text>
+          <Text style={{fontSize: 14, marginTop: 5, fontWeight: '400'}}>
+            {form.description}
+          </Text>
+        </View>
       ) : null}
     </View>
   );

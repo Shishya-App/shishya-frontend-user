@@ -6,6 +6,7 @@ import LottieView from "lottie-react-native";
 import { FlatList } from "react-native-gesture-handler";
 interface IProps {
   docArr: any;
+  setIsDone: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface IDOCProps {
@@ -13,15 +14,25 @@ interface IDOCProps {
   id: number;
   status: boolean;
 }
-const CompleteDocs = ({ docArr }: IProps) => {
+const CompleteDocs = ({ docArr, setIsDone}: IProps) => {
 
     const [index, setIndex] = useState(0);
+    // if(index === docArr.length) {
+    //   setIsDone(true);
+    // }
+    useEffect(() => {
+      if(index >= docArr.length) {
+          console.log("DOC ARR LEN: ", docArr.length);
+          setIsDone(true);
+        }
+    }, [index])
 
   return (
     <View>
       {docArr.map((document: IDOCProps, idx: number) => (
         index >= idx &&
         <View key={idx} style={{ marginBottom: 5, marginVertical: 20 }}>
+          
           <View
             style={{
               display: "flex",
@@ -44,7 +55,7 @@ const CompleteDocs = ({ docArr }: IProps) => {
               source={require("../assets/lottie/91937-progress-bar-fast.json")}
               style={{ width: Dimensions.get('window').width, height: 50 }}
               autoPlay
-              speed={1}
+              speed={2}
               loop={false}
               onAnimationFinish={() => setIndex((i) => i + 1)}
             />

@@ -117,13 +117,13 @@ const Login = ({
             <Pressable onPress={handlePageChange}>
               <Text style={styles.auth__text}> Signup</Text>
             </Pressable>
-            <Pressable
+            {/* <Pressable
               onPress={() => {
                 navigation.navigate("Main");
               }}
             >
               <Text>Click me</Text>
-            </Pressable>
+            </Pressable> */}
           </View>
           {/* <DialogComponent dialog="Email has been sent to you. Please confirm it...." onDone={() => navigation.navigate("Login")} title={"Email Confirmation"} toggleDialog={toggleDialog} visible={visible} /> */}
         </View>
