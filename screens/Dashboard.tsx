@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CommonActions } from "@react-navigation/native";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ApplicationRequests from "../components/ApplicationRequests";
@@ -11,7 +11,8 @@ import {
   BottomTabNavigationProps,
   DashboardRoutes,
 } from "../constants/DashboardRoutes";
-
+import { AuthContext } from "../store/AuthContext";
+import { IUser } from "../types/User";
 const width = Dimensions.get("window").width / 2.75;
 
 const jobsdata = [
@@ -40,11 +41,12 @@ const FellowShips = [
   },
 ];
 
-const Intro = () => {
+const Intro = ({ userData } : { userData : IUser | null}) => {
+  console.log("USER DATA: ", userData);
   return (
     <View style={{ marginHorizontal: 20, marginTop: 50, marginBottom: 20 }}>
       <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF" }}>
-        Hi, <Text style={{ color: "#FDB7B7" }}>John Doe</Text>
+        Hi, <Text style={{ color: "#FDB7B7" }}>{userData?.name}</Text>
       </Text>
       <Text style={{ fontSize: 12, color: "#FFFFFF" }}>Welcome to Shishya</Text>
     </View>
@@ -154,9 +156,25 @@ const ViewAllButton: React.FC<ViewAllButtonProps> = ({ navigation, type }) => {
 const Dashboard = ({
   navigation,
 }: BottomTabNavigationProps<DashboardRoutes, "Dashboard">) => {
+  // const { user } = useContext(AuthContext);
+  
+  // console.log("USER: ", user);
+
+  // console.log(typeof user);
+
+  const [user, setUser] = React.useState<IUser | null>(null);
+  useEffect(() => {
+    AsyncStorage.getItem("@user").then((user) => {
+      if(user) {
+        console.log(user);
+        setUser(JSON.parse(user));
+      }
+    });
+  }, []);
+
   return (
     <ArcBackground>
-      <Intro />
+      <Intro userData={user}/>
       <JobStats />
       <DashboardTitle text="Application Requests" />
       <GestureHandlerRootView>

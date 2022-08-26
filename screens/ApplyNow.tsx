@@ -25,7 +25,7 @@ const ApplyNow = ({
   // todo -> EXPECT THIS DATA TO COME FROM THE API
   const data = [
     {
-      title: "Death Certificate",
+      title: "Birth Certificate",
       status: true,
     },
     {
@@ -73,8 +73,13 @@ const ApplyNow = ({
             <Text style={{marginVertical: 10, fontSize: 20, fontWeight: '500', marginBottom: 20, color: 'grey'}}>Following documents need to be uploaded</Text>
             {index >= completeData.length ? (
             <View>
+<<<<<<< Updated upstream
                 {incompleteData.map((item, index) => (
                   <UncompleteDocs key={index} document={item}/>
+=======
+                {incompleteData.map((item, idx) => (
+                  <UncompleteDocs key = {idx} document={item}/>
+>>>>>>> Stashed changes
                 ))}
             </View>
             ) : null}

@@ -8,6 +8,8 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { CommonActions } from "@react-navigation/native";
 import Arrow from "../components/Arrow";
+import { IUser } from "../types/User";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ITEM_WIDTH = WIDTH * 0.8;
 
@@ -21,7 +23,7 @@ interface LinkData {
   icon: any;
 }
 
-const ProfileCard: React.FC = () => {
+const ProfileCard = ({user} : { user : IUser | null }) => {
   return (
     <LinearGradient
       colors={["#413DFF", "#547AFF"]}
@@ -43,7 +45,7 @@ const ProfileCard: React.FC = () => {
         <Text style={styles.cardText}>Aadhaar No.</Text>
       </View>
       <View style={{ marginVertical: 40 }}>
-        <Text style={styles.cardText}>Kalash Shah</Text>
+        <Text style={styles.cardText}>{user?.name}</Text>
         <Text style={styles.cardText}>04/12/2001</Text>
         <Text style={styles.cardText}>12345678910</Text>
       </View>
@@ -134,9 +136,19 @@ const ExtraLinks: React.FC<NavigationProp> = ({ navigation }) => {
 };
 
 const Profile: React.FC<NavigationProp> = ({ navigation }) => {
+  const [user, setUser] = React.useState<IUser | null>(null);
+  React.useEffect(() => {
+    AsyncStorage.getItem("@user").then((user) => {
+      if(user) {
+        console.log(user);
+        setUser(JSON.parse(user));
+      }
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProfileCard />
+      <ProfileCard user={user}/>
       <ProfileLinks navigation={navigation} />
       <ExtraLinks navigation={navigation} />
     </SafeAreaView>
