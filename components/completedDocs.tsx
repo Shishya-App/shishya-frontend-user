@@ -21,11 +21,7 @@ const CompleteDocs = ({ docArr }: IProps) => {
     <View>
       {docArr.map((document: IDOCProps, idx: number) => (
         index >= idx &&
-<<<<<<< Updated upstream
         <View key={idx} style={{ marginBottom: 5, marginVertical: 20 }}>
-=======
-        <View style={{ marginBottom: 5, marginVertical: 20 }} key={idx}>
->>>>>>> Stashed changes
           <View
             style={{
               display: "flex",
