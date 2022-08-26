@@ -33,17 +33,6 @@ const Signup = ({
     setVisible(!visible);
   };
 
-  // const handlePress = async () => {
-  //   const res = await signupAPI(username, password, email);
-  //   setLoading(loading);
-  //   toggleDialog();
-  // }; 
-
-  const handleVerifyAadhar = () => {
-
-  }
-
-
   return !loading ? (
     <ScrollView style={styles.main__container}>
       <View style={styles.main__container}>
@@ -68,21 +57,21 @@ const Signup = ({
               aadharNo: "",
             }}
             onSubmit={async (values) => {
-              // setLoading(true);
-              // const res = await signupAPI(
-              //   values.username,
-              //   values.password,
-              //   values.email
-              // );
-              // if (!res.isErr) {
-              //   console.log("SIGNUP RES: ", res);
-              //   setLoading(false);
-              //   toggleDialog();
-              // } else {
-              //   setLoading(false);
-              //   setErr(true);
-              // }
-              navigation.navigate('VerifyOTP');
+              setLoading(true);
+              const res = await signupAPI(
+                values.username,
+                values.password,
+                values.email
+              );
+              if (!res.isErr) {
+                console.log("SIGNUP RES: ", res);
+                setLoading(false);
+                toggleDialog();
+                navigation.navigate('VerifyOTP', {res: res});
+              } else {
+                setLoading(false);
+                setErr(true);
+              }
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => (

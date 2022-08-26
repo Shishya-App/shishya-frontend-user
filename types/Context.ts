@@ -9,4 +9,5 @@ export interface IAuthContext {
   signupAPI: (username: string, password: string, email: string) => Promise<any>;
   token: string | null;
   logout: () => Promise<void>;
+  verifyOTP:  (id: number, otp: string) => Promise<any>,
 }

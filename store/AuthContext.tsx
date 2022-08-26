@@ -11,6 +11,7 @@ export const AuthContext = createContext<IAuthContext>({
     loginAPI:  async (username: string, password: string) => {},
     signupAPI: async (username: string, password: string, email: string) => {},
     logout: async () => {},
+    verifyOTP:  async (id: number, otp: string) => {},
     token: null,
   });
   
@@ -79,6 +80,29 @@ export const AuthContext = createContext<IAuthContext>({
         }
     }
 
+    const verifyOTP = async (id: number, otp: string) => {
+      const data = {
+        id: id,
+        otp: otp,
+      };
+        const res = await execute({
+          method: "POST",
+          url: `verify/`,
+          data: data,
+        });
+        if(!res.isErr){
+          return {
+            isErr: false,
+            res: res.res,
+          }
+        } else {
+          return {
+            isErr: true,
+            res: res.res,
+          }
+        }
+    }
+
     const getCurrUser = () => {
 
     }
@@ -97,7 +121,8 @@ export const AuthContext = createContext<IAuthContext>({
         signupAPI,
         getCurrUser,
         token,
-        logout
+        logout,
+        verifyOTP
       }),
       [user, isLoggedIn]
     );
