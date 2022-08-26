@@ -9,10 +9,10 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const ApplyNow = ({
   navigation,
-  route
+  route,
 }: StackNavigationProps<AppRoutes, "ApplyNow">) => {
   const [index, setIndex] = React.useState(0);
-  const {form} = route.params;
+  const { form } = route.params;
   useEffect(() => {
     if (index < completeData.length - 1) {
       const tick = () => setIndex((i) => i + 1);
@@ -51,15 +51,24 @@ const ApplyNow = ({
 
   return (
     <SafeAreaView>
-      <ScrollView style={{padding: 20}}>
+      <ScrollView style={{ padding: 20 }}>
         <View>
           <Text style={{ fontSize: 24, fontWeight: "600" }}>
             Submitting Application..
           </Text>
-          <Text style={{fontSize: 20, fontWeight: '400', color: '#6C757D', marginTop: 8}}>{form.title}</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "400",
+              color: "#6C757D",
+              marginTop: 8,
+            }}
+          >
+            {form.title}
+          </Text>
         </View>
         <View style={{ width: "100%" }}>
-            {/* {completeData
+          {/* {completeData
             .filter((item, idx) => idx < index)
             .map((item) => (
                 <CompleteDocs document={item} />
@@ -68,25 +77,30 @@ const ApplyNow = ({
             {index < completeData.length ? (
                 <CompleteDocs document={completeData[index]} />
             ) : null} */}
-            {/* </Text> */}
-            <CompleteDocs docArr={completeData}/>
-            <Text style={{marginVertical: 10, fontSize: 20, fontWeight: '500', marginBottom: 20, color: 'grey'}}>Following documents need to be uploaded</Text>
-            {index >= completeData.length ? (
+          {/* </Text> */}
+          <CompleteDocs docArr={completeData} />
+          <Text
+            style={{
+              marginVertical: 10,
+              fontSize: 20,
+              fontWeight: "500",
+              marginBottom: 20,
+              color: "grey",
+            }}
+          >
+            Following documents need to be uploaded
+          </Text>
+          {index >= completeData.length ? (
             <View>
-<<<<<<< Updated upstream
-                {incompleteData.map((item, index) => (
-                  <UncompleteDocs key={index} document={item}/>
-=======
-                {incompleteData.map((item, idx) => (
-                  <UncompleteDocs key = {idx} document={item}/>
->>>>>>> Stashed changes
-                ))}
+              {incompleteData.map((item, index) => (
+                <UncompleteDocs key={index} document={item} />
+              ))}
             </View>
-            ) : null}
+          ) : null}
         </View>
 
-        <View style={{marginVertical: 20}}>
-            <CustomizedButton handlePress={() => {}} title={"Submit"}/>
+        <View style={{ marginVertical: 20 }}>
+          <CustomizedButton handlePress={() => {}} title={"Submit"} />
         </View>
       </ScrollView>
     </SafeAreaView>

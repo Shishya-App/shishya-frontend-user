@@ -156,7 +156,7 @@ const Signup = ({
                 />
                 <CustomTextInput
                  label="Adhaar Number"
-                 keyboardType="numeric"
+                 keyboardType="default"
                  placeholder="Adhaar Number"
                  onChangeText={handleChange("adhaarNo")}
                  onBlur={handleBlur("adhaarNo")}
