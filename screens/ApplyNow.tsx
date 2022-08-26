@@ -17,7 +17,7 @@ const ApplyNow = ({
     if (index < completeData.length - 1) {
       const tick = () => setIndex((i) => i + 1);
 
-      const id = setInterval(tick, 1000);
+      const id = setInterval(tick, 2000);
       return () => clearInterval(id);
     }
   }, []);
@@ -59,7 +59,7 @@ const ApplyNow = ({
           <Text style={{fontSize: 20, fontWeight: '400', color: '#6C757D', marginTop: 8}}>{form.title}</Text>
         </View>
         <View style={{ width: "100%" }}>
-            {completeData
+            {/* {completeData
             .filter((item, idx) => idx < index)
             .map((item) => (
                 <CompleteDocs document={item} />
@@ -67,8 +67,9 @@ const ApplyNow = ({
             <Text>
             {index < completeData.length ? (
                 <CompleteDocs document={completeData[index]} />
-            ) : null}
-            </Text>
+            ) : null} */}
+            {/* </Text> */}
+            <CompleteDocs docArr={completeData}/>
             <Text style={{marginVertical: 10, fontSize: 20, fontWeight: '500', marginBottom: 20, color: 'grey'}}>Following documents need to be uploaded</Text>
             {index >= completeData.length ? (
             <View>
