@@ -7,7 +7,8 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Card } from "@rneui/base";
+import { Card, CheckBox } from "@rneui/base";
+import { Dialog } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApplicationStatus, JobData } from "../types/Job";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
@@ -39,12 +40,67 @@ const jobData: JobData[] = [
   },
 ];
 
+const options = ["All", "Not Applied", "Pending", "Accepted", "Rejected"];
+
+interface FilterDialogProps {
+  isDialogOpen: boolean;
+  toggleDialog: () => void;
+  filter: number;
+  setFilter: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const FilterDialog: React.FC<FilterDialogProps> = ({
+  isDialogOpen,
+  toggleDialog,
+  filter,
+  setFilter,
+}) => {
+  return (
+    <Dialog
+      isVisible={isDialogOpen}
+      onBackdropPress={toggleDialog}
+      // for android
+    >
+      <Dialog.Title title="Select Preference" />
+      {options.map((l, i) => (
+        <CheckBox
+          key={i}
+          title={l}
+          containerStyle={{ backgroundColor: "white", borderWidth: 0 }}
+          checkedIcon="dot-circle-o"
+          uncheckedIcon="circle-o"
+          checked={filter === i}
+          onPress={() => setFilter((_) => i)}
+        />
+      ))}
+
+      <Dialog.Actions>
+        <Dialog.Button
+          title="Filter"
+          onPress={() => {
+            toggleDialog();
+          }}
+        />
+        <Dialog.Button
+          title="Close"
+          onPress={() => {
+            setFilter(0);
+            toggleDialog();
+          }}
+        />
+      </Dialog.Actions>
+    </Dialog>
+  );
+};
+
 const Jobs = ({
   navigation,
   route,
 }: StackNavigationProps<AppRoutes, "Jobs">) => {
   const [data, setData] = React.useState<JobData[]>([]);
   const [searchResult, setSearchResult] = React.useState<JobData[]>([]);
+  const [filter, setFilter] = React.useState<number>(0);
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { type } = route.params;
 
   React.useEffect(() => {
@@ -53,12 +109,16 @@ const Jobs = ({
 
   React.useEffect(() => {
     handleSearch("");
-  }, [data]);
+  }, [data, filter]);
 
   const handleSearch = (text: string) => {
     const lower = text.toLowerCase();
-    const result = data.filter((job) =>
-      job.title.toLowerCase().includes(lower)
+    const result = data.filter(
+      (job) =>
+        (job.title.toLowerCase().includes(lower) ||
+          job.company.toLowerCase().includes(lower) ||
+          job.tags.join(" ").toLowerCase().includes(lower)) &&
+        (options[filter] === "All" || job.applicationStatus === options[filter])
     );
     if (type === "Fellowship") {
       setSearchResult(result.filter((item) => item.isFellowship));
@@ -93,10 +153,30 @@ const Jobs = ({
     }
   };
 
+  const toggleDialog = () => {
+    setIsDialogOpen((prev) => !prev);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ marginTop: 10 }}>
-        <SearchBar handleSearch={handleSearch} />
+      <View style={{ marginTop: 10, display: "flex", flexDirection: "row" }}>
+        <View style={{ flex: 1 }}>
+          <SearchBar handleSearch={handleSearch} />
+        </View>
+        <Pressable
+          onPress={() => toggleDialog()}
+          style={{
+            backgroundColor: "#5D5AFF",
+            marginRight: 20,
+            flex: 0.15,
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Ionicons name="filter" size={24} color="white" />
+        </Pressable>
+        <FilterDialog {...{ filter, setFilter, isDialogOpen, toggleDialog }} />
       </View>
       <Text
         style={{

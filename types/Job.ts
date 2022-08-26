@@ -12,4 +12,5 @@ export interface JobData {
   applicationStatus: ApplicationStatus;
   salary: string;
   description: string;
+  isFellowship: boolean;
 }

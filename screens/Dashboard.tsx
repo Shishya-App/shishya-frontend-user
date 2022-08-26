@@ -41,7 +41,7 @@ const FellowShips = [
   },
 ];
 
-const Intro = ({ userData } : { userData : IUser | null}) => {
+const Intro = ({ userData }: { userData: IUser | null }) => {
   console.log("USER DATA: ", userData);
   return (
     <View style={{ marginHorizontal: 20, marginTop: 50, marginBottom: 20 }}>
@@ -157,7 +157,7 @@ const Dashboard = ({
   navigation,
 }: BottomTabNavigationProps<DashboardRoutes, "Dashboard">) => {
   // const { user } = useContext(AuthContext);
-  
+
   // console.log("USER: ", user);
 
   // console.log(typeof user);
@@ -165,7 +165,7 @@ const Dashboard = ({
   const [user, setUser] = React.useState<IUser | null>(null);
   useEffect(() => {
     AsyncStorage.getItem("@user").then((user) => {
-      if(user) {
+      if (user) {
         console.log(user);
         setUser(JSON.parse(user));
       }
@@ -174,7 +174,7 @@ const Dashboard = ({
 
   return (
     <ArcBackground>
-      <Intro userData={user}/>
+      <Intro userData={user} />
       <JobStats />
       <DashboardTitle text="Application Requests" />
       <GestureHandlerRootView>
@@ -185,14 +185,22 @@ const Dashboard = ({
         <ViewAllButton navigation={navigation} type="Job" />
       </View>
       <GestureHandlerRootView style={{ paddingVertical: 10 }}>
-        <JobOpeningsCarousel navigation={navigation} data={jobsdata} />
+        <JobOpeningsCarousel
+          navigation={navigation}
+          data={jobsdata}
+          type="Job"
+        />
       </GestureHandlerRootView>
       <View style={styles.jobWrapper}>
         <DashboardTitle text="Fellowships/Grants" />
         <ViewAllButton navigation={navigation} type="Fellowship" />
       </View>
       <GestureHandlerRootView style={{ paddingVertical: 10 }}>
-        <JobOpeningsCarousel navigation={navigation} data={FellowShips} />
+        <JobOpeningsCarousel
+          navigation={navigation}
+          data={FellowShips}
+          type="Fellowship"
+        />
       </GestureHandlerRootView>
     </ArcBackground>
   );

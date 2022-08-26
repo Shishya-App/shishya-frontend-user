@@ -11,6 +11,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { AntDesign } from "@expo/vector-icons";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { DashboardRoutes } from "../constants/DashboardRoutes";
+import { CommonActions } from "@react-navigation/native";
 
 const data = [
   {
@@ -78,7 +79,14 @@ const ApplicationRequests: React.FC<Props> = ({ navigation }) => {
           <View style={{ marginLeft: 20 }}>
             <Pressable
               onPress={() => {
-                // navigation.navigate("ApplyNow");
+                navigation.dispatch(
+                  CommonActions.navigate({
+                    name: "Jobs",
+                    params: {
+                      type: "Job",
+                    },
+                  })
+                );
               }}
             >
               <Text style={{ color: "#716EFF", fontSize: 16 }}>
