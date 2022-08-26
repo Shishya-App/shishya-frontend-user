@@ -1,5 +1,6 @@
 import { OTPData } from "./OTP";
 import { IUser } from "./User";
+import { verifyProps } from "./verifyProps";
 
 
 export interface IAuthContext {
@@ -11,5 +12,7 @@ export interface IAuthContext {
   token: string | null;
   logout: () => Promise<void>;
   verifyOTP:  (id: number, otp: string) => Promise<any>,
+  // getVerifiedDocs: () => Promise<void>,
+  // verifiedDocs: verifyProps[],
   getCurrUser: () => Promise<any>,
 }

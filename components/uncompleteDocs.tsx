@@ -5,11 +5,13 @@ import * as DocumentPicker from "expo-document-picker";
 import { Entypo } from "@expo/vector-icons"; 
 
 interface IProps {
-    document: any
+    document: any,
+    setFinalUpload: React.Dispatch<React.SetStateAction<any[]>>,
+    finalUpload: any
 }
 
 
-const UncompleteDocs = ({document}: IProps) => {
+const UncompleteDocs = ({document, setFinalUpload, finalUpload}: IProps) => {
     const [fileResponse, setFileResponse] =
     React.useState<null | DocumentPicker.DocumentResult>(null);
   const [error, setError] = React.useState<boolean>(false);
@@ -25,7 +27,11 @@ const UncompleteDocs = ({document}: IProps) => {
         type: "application/pdf",
       });
       setError(false);
-      if (response.type === "success") setFileResponse(response);
+      if (response.type === "success") {
+        setFileResponse(response);
+        // setIncompleteData([...incompleteData, response]);
+        setFinalUpload((prev) => [...prev, response]);
+      }
       else if (response.type === "cancel") setFileResponse(null);
       else throw new Error("Something went wrong");
     } catch (err) {
@@ -33,6 +39,8 @@ const UncompleteDocs = ({document}: IProps) => {
       handleError();
     }
   }, []);
+
+  
     return (
         <View style={{marginBottom: 15}}>
             <View style={{display:'flex', flexDirection:'row'}}>

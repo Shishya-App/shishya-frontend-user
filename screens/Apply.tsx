@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
 import FormComponent from "../components/FormComponent";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
@@ -12,79 +12,79 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SearchBar as SearchBarRNEUI } from "@rneui/base";
 import DialogComponent from "../components/DialogComponent";
 import { CommonActions } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useAxios from "../hooks/useAxios";
+import LoadingAPIS from "../components/LoadingApis";
 
-const formData: FormData[] = [
-  {
-    id: 1,
-    title: "ISRO Fellowship Programme",
-    private: true,
-  },
-  {
-    id: 2,
-    title: "Form 2",
-    private: true,
-  },
-  {
-    id: 3,
-    title: "Form 3",
-    private: false,
-  },
-  {
-    id: 4,
-    title: "Form 4",
-    private: false,
-  },
-  {
-    id: 5,
-    title: "Form 5",
-    private: true,
-  },
-  {
-    id: 6,
-    title: "Form 6",
-    private: false,
-  },
-  {
-    id: 7,
-    title: "Form 7",
-    private: false,
-  },
-  {
-    id: 8,
-    title: "Form 8",
-    private: false,
-  },
-];
+
 const Apply = ({
   navigation,
 }: BottomTabNavigationProps<DashboardRoutes, "Apply">) => {
-  const [data, setData] = React.useState<FormData[]>(formData);
+  const [data, setData] = React.useState<FormData[]>([]);
   const [searchResult, setSearchResult] = React.useState<FormData[]>([]);
   const [visible, setVisible] = React.useState(false);
   const [selectedForm, setSelectedForm] = React.useState<FormData>();
+  const { execute } = useAxios();
+  const [loading, setLoading] = React.useState(false);
+  const [verifiedDocs, setVerifiedDocs] = React.useState();
+
+  useEffect(() => {
+    const getVerifiedDocs = async () => {
+      const res = await execute({
+        url: "adminpanel/bool-docs/",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${await AsyncStorage.getItem("@token")}`,
+        },
+      });
+      // @ts-ignore
+      // var data = [];
+      // Object.entries(res.res).forEach(([key, value]) => {
+      //   data.push({ status: value, title: key });
+      // });
+      // @ts-ignore 
+      setVerifiedDocs(res.res);
+    };
+    const getData = async () => {
+      const token = await AsyncStorage.getItem("@token");
+      const res = await execute({
+        url: "adminpanel/form/",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      setData(res?.res);
+      setSearchResult(res?.res);
+      
+    };
+
+    setLoading(true);
+    getVerifiedDocs();
+    getData();
+    setLoading(false);
+
+  }, []);
 
   const showDialog = (item: any) => {
     setVisible(true);
     setSelectedForm(item);
-  }
-  
+  };
+
   const hideDialog = () => {
     setVisible(false);
-  }
-
-  React.useEffect(() => {
-    setData(formData);
-    setSearchResult(formData);
-  }, []);
+  };
 
   const handleSearch = (text: string) => {
-    const result = formData.filter((form) =>
+    const result = data.filter((form) =>
       form.title.toLowerCase().includes(text.toLowerCase())
     );
     setSearchResult(result);
   };
 
   return (
+    !loading ?
     <ArcBackground>
       <SafeAreaView>
         <View style={{ marginTop: 10 }}>
@@ -133,30 +133,44 @@ const Apply = ({
           {searchResult.length} relevant forms found
         </Text>
 
-          <FlatList 
-          style={{marginTop: 20}}
-            showsVerticalScrollIndicator={false}
-            data={searchResult}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <FormComponent form={item} navigation={navigation} onPress={item?.private ? () => showDialog(item) : () => navigation.dispatch(CommonActions.navigate('ApplyNow', {form: item}))}/>
-            )}
-          />
+        <FlatList
+          style={{ marginTop: 20 }}
+          showsVerticalScrollIndicator={false}
+          data={searchResult}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <FormComponent
+              form={item}
+              navigation={navigation}
+              onPress={
+                item?.private
+                  ? () => showDialog(item)
+                  : () =>
+                      navigation.dispatch(
+                        CommonActions.navigate("ApplyNow", { form: item, verifiedDocs : verifiedDocs })
+                      )
+              }
+            />
+          )}
+        />
       </SafeAreaView>
       <>
-          {
-            visible && selectedForm?.private ? (
-              <DialogComponent
-                visible={visible}
-                toggleDialog={hideDialog}
-                dialog="This is a private organization are you sure you want to proceed?"
-                onDone={() => {hideDialog(); return navigation.dispatch(CommonActions.navigate("ApplyNow", { form: selectedForm }))}}
-                title="Confirmation"
-              />
-            ) : null
-          }
+        {visible && selectedForm?.private ? (
+          <DialogComponent
+            visible={visible}
+            toggleDialog={hideDialog}
+            dialog="This is a private organization are you sure you want to proceed?"
+            onDone={() => {
+              hideDialog();
+              return navigation.dispatch(
+                CommonActions.navigate("ApplyNow", { form: selectedForm })
+              );
+            }}
+            title="Confirmation"
+          />
+        ) : null}
       </>
-    </ArcBackground>
+    </ArcBackground> : <LoadingAPIS dialog="Please wait while we fetch forms.."/>
   );
 };
 
