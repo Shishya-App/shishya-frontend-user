@@ -23,6 +23,9 @@ const ApplyNow = ({
   const [loading, setLoading] = React.useState(false);
   const [isDone, setIsDone] = React.useState(false);
   const [ques, setQues] = React.useState();
+  const [sucRes, setSucRes] = React.useState(0);
+  const [err, isErr] = React.useState(false);
+
   // const [fetchQues, setFetchQues] = React.useState(true);
   const { form, verifiedDocs} = route.params;
   const [finalUpload, setFinalUpload] = React.useState([]);
@@ -101,25 +104,29 @@ const ApplyNow = ({
   console.log("FINAL UPLOAD: ", finalUpload);
   
   const handleSubmitNew = async (fileResponse: any) => {
-    if (fileResponse?.type !== "success") return;
+    setUploading(true);
+    const fileRess = fileResponse?.fileRes;
+    const quesID = fileResponse?.quesID;
+
+    if (fileRess?.type !== "success") return;
     const data = new FormData();
 
     data.append("answer", {
       // @ts-ignore
-      name: fileResponse.name,
+      name: fileRess.name,
       type: "application/pdf",
-      uri: fileResponse.uri,
+      uri: fileRess.uri,
     });
-    data.append("form", JSON.stringify(form.id));
-    data.append("user", JSON.stringify(user?.id));
-    data.append("question", JSON.stringify());
+    data.append("form", form.id);
+    data.append("user", user?.id);
+    data.append("question", quesID);
     // data.append("user", "1");
 
-    console.log(data);
+    // console.log(data);
 
     const uploadFile = async () => {
       try {
-        console.log("uploading file", fileResponse);
+        console.log("uploading file", fileRess);
         // const token = await getToken();
         const token = await AsyncStorage.getItem('@token');
         console.log("Bearer", token);
@@ -135,21 +142,27 @@ const ApplyNow = ({
         if (response.isErr) throw new Error("Error uploading file");
         // setSuccess(true);
         console.log(response);
+        
       } catch (err) {
         console.log(err);
+        isErr(true);
         // handleError();
       }
+      setUploading(false);
     };
-
+    
     uploadFile();
   };
 
   const handleSubmit = async () => {
-    setUploading(true);
+    // setUploading(true);
     for(let i=0; i<finalUpload.length; i++){
         handleSubmitNew(finalUpload[i]);
     }
-    setUploading(false);
+    // setUploading(false);
+    if(!err){
+      navigation.navigate('Main');
+    }
   }
 
   const handleFakeSubmit = async () => {
@@ -210,7 +223,7 @@ const ApplyNow = ({
                   ))}
               </View>
               <View style={{ marginVertical: 20 }}>
-                <CustomizedButton handlePress={handleFakeSubmit} title={"Submit"} />
+                <CustomizedButton handlePress={handleSubmit} title={"Submit"} />
               </View>
             </View> : null
           }

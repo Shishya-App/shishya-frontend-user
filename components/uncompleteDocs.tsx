@@ -30,7 +30,9 @@ const UncompleteDocs = ({document, setFinalUpload, finalUpload}: IProps) => {
       if (response.type === "success") {
         setFileResponse(response);
         // setIncompleteData([...incompleteData, response]);
-        setFinalUpload((prev) => [...prev, response]);
+        console.log("DOCUMENT: ", document);
+
+        setFinalUpload((prev) => [...prev, {fileRes: response, quesID: document.id}]);
       }
       else if (response.type === "cancel") setFileResponse(null);
       else throw new Error("Something went wrong");
