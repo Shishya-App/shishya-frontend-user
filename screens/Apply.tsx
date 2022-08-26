@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
+import { View, Text, StyleSheet, ScrollView, FlatList, Pressable } from "react-native";
 import FormComponent from "../components/FormComponent";
 import { AppRoutes, StackNavigationProps } from "../constants/AppRoutes";
 import {
@@ -15,6 +15,7 @@ import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useAxios from "../hooks/useAxios";
 import LoadingAPIS from "../components/LoadingApis";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 const Apply = ({
@@ -28,38 +29,37 @@ const Apply = ({
   const [loading, setLoading] = React.useState(false);
   const [verifiedDocs, setVerifiedDocs] = React.useState();
 
+  const getVerifiedDocs = async () => {
+    const res = await execute({
+      url: "adminpanel/bool-docs/",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${await AsyncStorage.getItem("@token")}`,
+      },
+    });
+    // @ts-ignore
+    // var data = [];
+    // Object.entries(res.res).forEach(([key, value]) => {
+    //   data.push({ status: value, title: key });
+    // });
+    // @ts-ignore 
+    setVerifiedDocs(res.res);
+  };
+  const getData = async () => {
+    const token = await AsyncStorage.getItem("@token");
+    const res = await execute({
+      url: "adminpanel/form/",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    setData(res?.res);
+    setSearchResult(res?.res);
+
+  };
   useEffect(() => {
-    const getVerifiedDocs = async () => {
-      const res = await execute({
-        url: "adminpanel/bool-docs/",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${await AsyncStorage.getItem("@token")}`,
-        },
-      });
-      // @ts-ignore
-      // var data = [];
-      // Object.entries(res.res).forEach(([key, value]) => {
-      //   data.push({ status: value, title: key });
-      // });
-      // @ts-ignore 
-      setVerifiedDocs(res.res);
-    };
-    const getData = async () => {
-      const token = await AsyncStorage.getItem("@token");
-      const res = await execute({
-        url: "adminpanel/form/",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      });
-
-      setData(res?.res);
-      setSearchResult(res?.res);
-      
-    };
-
     setLoading(true);
     getVerifiedDocs();
     getData();
@@ -120,6 +120,9 @@ const Apply = ({
             onChangeText={(text) => handleSearch(text)}
           />
         </View>
+        <TouchableOpacity onPress={getData} style={{backgroundColor:'white', borderRadius: 50, padding: 5, width: '50%', display:'flex', alignSelf:'center', marginVertical: 10}}>
+          <Text style={{color: 'black', fontSize: 18,textAlign:'center'}}>Refresh</Text>
+        </TouchableOpacity>
         <Text
           style={{
             fontSize: 18,
@@ -134,7 +137,7 @@ const Apply = ({
         </Text>
 
         <FlatList
-          style={{ marginTop: 20 }}
+          style={{ marginVertical: 60 }}
           showsVerticalScrollIndicator={false}
           data={searchResult}
           keyExtractor={(item) => item.id.toString()}
