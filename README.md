@@ -5,11 +5,19 @@ User frontend of the Shishya App, for AICTE affiliated colleges, other governmen
 
 ## Features :sparkles: -
 
-
 - ### No need to manually verify the documents
   - Two step document verification at a single point. (Machine Learning Model && Admin Check)
   - No organization (Public or Private) needs to worry about the verification status of the documents.
   
+- ### Authentication which links through your adhaar card.
+  - A very secured authentication system which links your adhaar card through your mobile number using OTP based system.
+ 
+  <p float="left">
+      <img src="https://user-images.githubusercontent.com/78278281/187246526-8510445c-e0f6-4dbe-bf50-446bccd625ca.jpeg" width="240" height="500"/>
+      <img src="https://user-images.githubusercontent.com/78278281/187246518-a8ff13b4-9a16-4394-89af-5e331f6b18db.jpeg" width="240" height="500"/>
+      <img src="https://user-images.githubusercontent.com/78278281/187246533-45db64ce-a154-49f9-aee0-78cbd3c9400f.jpeg" width="240" height="500"/>
+      <img src="https://user-images.githubusercontent.com/78278281/187247261-f789a144-31bf-40b1-aaf2-cbb7c6dc3df7.jpg" width="240" height="500"/>
+  </p>
   
 - ### Upload custom document and save storage
   - Upload custom documents only once and save storage. Get verified documents directly from the NAD (National Academic Depository).
