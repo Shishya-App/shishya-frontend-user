@@ -21,8 +21,10 @@ User frontend of the Shishya App, for AICTE affiliated colleges, other governmen
   
 - ### Upload custom document and save storage
   - Upload custom documents only once and save storage. Get verified documents directly from the NAD (National Academic Depository).
+   <p>
+     <img src="https://user-images.githubusercontent.com/78278281/187236827-fe67745d-474d-47e5-9cf4-6d4d1e789729.jpg" width="250" height="500"/>
+   </p>
 
-  <img src="https://user-images.githubusercontent.com/78278281/187236827-fe67745d-474d-47e5-9cf4-6d4d1e789729.jpg" width="250" height="500"/>
 
 - ### Job, Fellowships and Grants Alert System.
   - Get all job alerts, fellowships and grants at one point based on different filters.
